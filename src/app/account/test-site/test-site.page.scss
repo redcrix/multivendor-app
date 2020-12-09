@@ -1,0 +1,29 @@
+.login1 {
+    padding: 16px;
+    ion-list {
+        margin: 16px 8px;
+        background: transparent;
+        ion-item {
+            --background: transparent;
+        }
+    }
+    ion-button {
+        --border-radius: 4px;
+    }
+    p {
+        text-align: center;
+    }
+    display: flex !important;
+    justify-content: center !important;
+    height: 100%;
+    flex-direction: column;
+    ion-card {
+        padding: 10px;
+        margin: 0;
+        background: white;
+    }
+    ion-item {
+        --padding-start: 0;
+    }
+    --inner-padding-start: 0;
+}

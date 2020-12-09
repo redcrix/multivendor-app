@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>575406529046-b1qmivbcqtu8ql9p1vd1dn2m5a6t814v.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.575406529046-b1qmivbcqtu8ql9p1vd1dn2m5a6t814v</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>575406529046-bfjj9aqi8spup8697lqhtpg6imq95ru1.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCPY4krqj4wlNwkprX_04YWwbA37giMNn8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>575406529046</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.woomultivendor.app001</string>
+	<key>PROJECT_ID</key>
+	<string>firebase-adminapp</string>
+	<key>STORAGE_BUCKET</key>
+	<string>firebase-adminapp.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:575406529046:ios:ab8c549e6de6d434</string>
+	<key>DATABASE_URL</key>
+	<string>https://fir-adminapp.firebaseio.com</string>
+</dict>
+</plist>

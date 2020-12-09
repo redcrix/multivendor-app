@@ -1,0 +1,41 @@
+<ion-header mode='ios'>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/account"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{"Test Site" | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+<div class="login1">
+<div class="form">
+
+<ion-list>
+  <form [formGroup]="form">
+  <ion-item>
+  <ion-input required type="text" formControlName="url" placeholder="Url"></ion-input>
+  </ion-item>
+  <ion-item>
+  <ion-input type="text" formControlName="consumerKey" placeholder="Consumer Key"></ion-input>
+  </ion-item>
+  <ion-item>
+  <ion-input type="text" formControlName="consumerSecret" placeholder="Consumer Secret"></ion-input>
+  </ion-item>
+</form>
+</ion-list>
+ <ion-button color="{{settings.theme.button}}" expand="block" fill="solid" [disabled]="!form.valid || disableSubmit" (click)="onSubmit()">{{"Submit" | translate}}</ion-button>
+
+<div class="errors" style="text-align: center; padding-top: 20px;">
+ <ion-label>Install plugin - <a href="https://drive.google.com/open?id=1WW91qCEjSlqRQrEnxC7cwGpWkVJIb9G7">https://drive.google.com/open?id=1WW91qCEjSlqRQrEnxC7cwGpWkVJIb9G7</a></ion-label>
+</div>
+
+<div class="errors" *ngIf="errors">
+  <div *ngFor="let error of errors | keys" style="text-align: center; padding-top: 20px;">
+    <ion-label color="danger" class="error" [innerHTML]="error.value"></ion-label>
+  </div>
+ </div>
+</div>
+</div>
+</ion-content>
