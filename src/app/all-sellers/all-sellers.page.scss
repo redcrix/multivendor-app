@@ -31,14 +31,15 @@ ion-content {
   }
 }
 
+.container {
+  padding: 22px;
+  padding-top: 3px;
+}
+
 ion-icon.cart_icn.md.hydrated {
   font-size: 23px;
   margin-right: 10px;
   color: var(--ion-color-primary);
-}
-
-.container__ {
-  padding: 14px;
 }
 
 ion-icon.cart_icn.ios.hydrated {

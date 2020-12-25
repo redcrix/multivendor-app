@@ -56,12 +56,15 @@ import { SubcategoryPage } from "./../vendor/product-add/subcategory/subcategory
 
 import { TestSitePage } from "./../account/test-site/test-site.page";
 
+import { AllSellersPage } from "../all-sellers/all-sellers.page";
 import { TermsConditionPage } from "../terms-condition/terms-condition.page";
 import { HelpPage } from "../help/help.page";
 import { PrivacyPolicyPage } from "../privacy-policy/privacy-policy.page";
+import { CountdownTimerModule } from "angular-countdown-timer";
 
 @NgModule({
   imports: [
+    CountdownTimerModule,
     IonicModule,
     CommonModule,
     FormsModule,
@@ -100,6 +103,7 @@ import { PrivacyPolicyPage } from "../privacy-policy/privacy-policy.page";
     CurrenciesPage,
     WalletPage,
     WishlistPage,
+    AllSellersPage,
     TermsConditionPage,
     HelpPage,
     PrivacyPolicyPage,

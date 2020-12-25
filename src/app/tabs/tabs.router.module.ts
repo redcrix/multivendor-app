@@ -49,6 +49,7 @@ import { SubcategoryPage } from "./../vendor/product-add/subcategory/subcategory
 
 import { TestSitePage } from "./../account/test-site/test-site.page";
 
+import { AllSellersPage } from "../all-sellers/all-sellers.page";
 import { TermsConditionPage } from "../terms-condition/terms-condition.page";
 import { HelpPage } from "../help/help.page";
 import { PrivacyPolicyPage } from "../privacy-policy/privacy-policy.page";
@@ -72,6 +73,15 @@ const routes: Routes = [
           {
             path: "",
             component: HelpPage,
+          },
+        ],
+      },
+      {
+        path: "all-sellers",
+        children: [
+          {
+            path: "",
+            component: AllSellersPage,
           },
         ],
       },

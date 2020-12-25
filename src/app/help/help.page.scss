@@ -1,0 +1,45 @@
+.conte {
+  background: white;
+  margin-left: 20px;
+  margin-top: 30px;
+}
+
+p.cnt {
+  margin-left: 20px;
+  text-decoration: underline;
+  font-size: 23px;
+  color: var(--ion-color-primary);
+}
+
+ion-content.ios.overscroll.hydrated {
+  --background: #d7d8da;
+}
+
+ion-content.md.overscroll.hydrated {
+  --background: #d7d8da;
+}
+.contact-cont {
+  width: 201px;
+  border-radius: 10px;
+  /* padding-left: 18px; */
+  padding-top: 2px;
+  height: 99px;
+  background: white;
+  margin-left: 20px;
+  margin-top: 30px;
+}
+img.con-im {
+  height: 320px;
+}
+
+.conte {
+  width: 201px;
+  border-radius: 10px;
+  padding-left: 18px;
+  padding-top: 2px;
+  height: 99px;
+}
+
+p.conte-txt {
+  font-weight: bold;
+}

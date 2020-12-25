@@ -23,6 +23,7 @@ export class HomePage {
   hasMoreItems: boolean = true;
   cart: any;
   screenWidth: any = 300;
+  all_vendors_auctions: any;
   slideOpts = {
     effect: "flip",
     autoplay: true,
@@ -105,7 +106,26 @@ export class HomePage {
       }
     );
   }
+  // wp-json/rest-api/v1/auction_products
+  getAuctions_Product() {
+    this.api.postItem_Custom("auction_products").subscribe(
+      (res) => {
+        this.all_vendors_auctions = [];
+        this.all_vendors_auctions = res;
+        console.log(JSON.stringify(this.all_vendors_auctions));
+
+        // this.data.updateCart(this.cart.cart_contents);
+        // this.data.cartNonce = this.cart.cart_nonce;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
   getBlocks() {
+    this.getAuctions_Product();
+
     this.api.postItem("keys").subscribe(
       (res) => {
         this.data.blocks = res;
@@ -135,6 +155,7 @@ export class HomePage {
         if (this.settings.colWidthLatest == 4) this.filter.per_page = 15;
         this.splashScreen.hide();
         this.getCart();
+
         this.processOnsignal();
         if (this.data.blocks.user) {
           this.settings.customer.id = this.data.blocks.user.ID;
@@ -221,6 +242,8 @@ export class HomePage {
       this.navCtrl.navigateForward("/tabs/home/post/" + item.url);
   }
   getProduct(item) {
+    console.log(JSON.stringify(item));
+
     this.product.product = item;
     this.navCtrl.navigateForward("/tabs/home/product/" + item.id);
   }

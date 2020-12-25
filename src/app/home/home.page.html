@@ -214,6 +214,10 @@
         </div>
       </div>
 
+      <!-- ================== -->
+
+      <!-- ======================================= -->
+
       <div
         *ngIf="children.block_type == 'product_block' && children.products?.length"
         [style.background-color]="children.bg_color"
@@ -680,6 +684,95 @@
       </div>
     </div>
 
+    <div class="all_vendors_auctions">
+      <div class="header_" *ngIf="all_vendors_auctions?.length">
+        <p class="Auctions-">
+          <ion-icon
+            class="icon_down"
+            name="arrow-down-circle-outline"
+          ></ion-icon
+          >Auctions
+        </p>
+      </div>
+
+      <div class="scroll-related-products">
+        <div
+          class="product"
+          *ngFor="let item of all_vendors_auctions"
+          [style.width.px]="settings.dimensions.homeSliderWidth"
+        >
+          <ion-card
+            mode="md"
+            class="ion-activatable ion-focusable hydrated {{settings.settings.product_shadow}}"
+            [style.border-radius.px]="settings.dimensions.productBorderRadius"
+          >
+            <ion-card-content>
+              <ion-img
+                alt=""
+                *ngIf="item.images?.length"
+                [src]="item.images[0].src"
+                (click)="getProduct(item)"
+                [style.height.px]="settings.dimensions.homeSliderHeight"
+              ></ion-img>
+              <ion-img
+                alt=""
+                [style.height.px]="settings.dimensions.homeSliderHeight"
+                *ngIf="!item.images?.length"
+                src="assets/image/logo.png"
+                (click)="getProduct(item)"
+              ></ion-img
+              ><ion-icon
+                name="heart-outline"
+                mode="md"
+                class="wishlist-button-grid"
+                *ngIf="!settings.wishlist[item.id]"
+                (click)="settings.addToWishlist(item.id)"
+              ></ion-icon>
+              <ion-icon
+                name="heart"
+                color="{{settings.theme.button}}"
+                mode="md"
+                class="wishlist-button-grid"
+                *ngIf="settings.wishlist[item.id]"
+                (click)="settings.removeFromWishlist(item.id)"
+              ></ion-icon>
+              <ion-button
+                color="danger"
+                class="stock"
+                *ngIf="item.stock_status == 'outofstock'"
+                >{{"No Stock" | translate}}</ion-button
+              >
+              <!-- <div *ngIf="item.stock_status == 'instock'">
+                <ion-button
+                  class="offer"
+                  *ngIf="((item.regular_price - item.price) /item.regular_price*100) >= 1"
+                  >{{(item.regular_price - item.price) /item.regular_price*100
+                  | number : '1.0-0'}}%</ion-button
+                >
+              </div> -->
+            </ion-card-content>
+            <ion-card-header (click)="getProduct(item)">
+              <ion-card-title mode="md">{{item.name}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content (click)="getProduct(item)">
+              <p class="price">
+                <span
+                  class="regular-price"
+                  *ngIf="!item.sale_price"
+                  [innerHTML]="item.formated_price"
+                ></span>
+                <span class="regular-price" *ngIf="item.sale_price"
+                  ><span [innerHTML]="item.formated_sales_price"></span
+                  ><span class="special-price"
+                    ><del [innerHTML]="item.formated_price"></del></span
+                ></span>
+              </p>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </div>
+    </div>
+
     <div *ngIf="data.blocks?.featured?.length" class="related-products">
       <ion-list-header>
         <ion-label>{{"Featured Products" | translate}}</ion-label>
@@ -760,6 +853,13 @@
           </ion-card>
         </div>
       </div>
+    </div>
+
+    <div class="header_" *ngIf="data.products?.length">
+      <p class="Auctions-">
+        <ion-icon class="icon_down" name="arrow-down-circle-outline"></ion-icon
+        >Shop
+      </p>
     </div>
 
     <ion-row *ngIf="data.products?.length">
