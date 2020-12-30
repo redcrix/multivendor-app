@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-icon
+        color="primary"
+        class="cbckc"
+        (click)="goBack()"
+        name="arrow-back-outline"
+      ></ion-icon>
+    </ion-buttons>
+
+    <ion-title>Support</ion-title>
+
+    <ion-buttons slot="end" (click)="close_()">
+      <ion-icon class="cart_icn" name="close-outline"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <div class="container">
+    <div class="modal-pop">
+      <div class="item-cl">
+        <p class="txt-he">Select Category</p>
+        <ion-select multiple="false" [(ngModel)]="valSelCat">
+          <ion-select-option
+            *ngFor="let maschine of all_categories"
+            value="{{maschine.id}}"
+            >{{maschine.value}}</ion-select-option
+          >
+        </ion-select>
+      </div>
+
+      <div class="item-cl">
+        <p class="txt-he">Select Priority</p>
+        <ion-select multiple="false" [(ngModel)]="valSel">
+          <ion-select-option
+            *ngFor="let maschine of all_support_priority_types"
+            value="{{maschine.value}}"
+            >{{maschine.value}}</ion-select-option
+          >
+        </ion-select>
+      </div>
+
+      <div class="item-cl">
+        <ion-item>
+          <ion-label position="stacked">Your Query</ion-label>
+          <ion-textarea [(ngModel)]="enquiry_fill"> </ion-textarea>
+        </ion-item>
+      </div>
+
+      <p class="err-txt">{{message}}</p>
+      <ion-row>
+        <ion-col style="text-align: center">
+          <ion-button class="btncl" (click)="sendReq()">Send</ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</ion-content>

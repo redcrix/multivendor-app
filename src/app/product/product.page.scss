@@ -110,7 +110,37 @@ p.txt_ {
   bottom: 2px solid red;
   border: 2px solid;
 }
+button.contc-btn {
+  display: inline-flex;
+}
+ion-icon.info-ic.md.hydrated {
+  margin-top: 8px;
+  margin-right: 3px;
+}
 
+ion-icon.info-ic.ios.hydrated {
+  margin-top: 8px;
+  margin-right: 3px;
+}
+ion-icon.info-ic.ios.hydrated {
+  font-size: 22px;
+}
+
+ion-icon.info-ic.md.hydrated {
+  font-size: 22px;
+}
+
+button.contc-btn {
+  margin-left: 16px;
+  margin-top: 12px;
+  background: var(--ion-color-primary);
+  padding-left: 13px;
+  padding-top: 9px;
+  padding-bottom: 7px;
+  padding-right: 13px;
+  color: white;
+  margin-bottom: 12px;
+}
 p.text-details {
   width: 100px;
   text-align: center;
@@ -132,6 +162,9 @@ p.text_bid_vendor {
 input.input_num.ng-valid.ng-touched.ng-dirty {
   height: 40px;
   width: 70px;
+}
+
+.auctions_bar {
   margin-left: 15px;
 }
 

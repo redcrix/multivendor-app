@@ -48,7 +48,7 @@ import { PhotosPage } from "./../vendor/product-add/photos/photos.page";
 import { SubcategoryPage } from "./../vendor/product-add/subcategory/subcategory.page";
 
 import { TestSitePage } from "./../account/test-site/test-site.page";
-
+import { SupportPage } from "../support/support.page";
 import { AllSellersPage } from "../all-sellers/all-sellers.page";
 import { TermsConditionPage } from "../terms-condition/terms-condition.page";
 import { HelpPage } from "../help/help.page";
@@ -76,6 +76,16 @@ const routes: Routes = [
           },
         ],
       },
+      {
+        path: "support",
+        children: [
+          {
+            path: "",
+            component: SupportPage,
+          },
+        ],
+      },
+
       {
         path: "all-sellers",
         children: [

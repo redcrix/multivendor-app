@@ -420,5 +420,15 @@ export class ApiService {
       catchError(this.handleError(endPoint))
     );
   }
+
+  post_data_API(endPoint, data) {
+    let url = this.config.url + "/wp-json/rest-api/v1/" + endPoint;
+
+    let UrlParms = this.config.url + endPoint;
+    return this.http.post(url, data).pipe(
+      tap((_) => {}),
+      catchError(this.handleError(endPoint))
+    );
+  }
   /* End Request for wc v2 apis */
 }

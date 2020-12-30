@@ -56,6 +56,7 @@ import { SubcategoryPage } from "./../vendor/product-add/subcategory/subcategory
 
 import { TestSitePage } from "./../account/test-site/test-site.page";
 
+import { SupportPage } from "../support/support.page";
 import { AllSellersPage } from "../all-sellers/all-sellers.page";
 import { TermsConditionPage } from "../terms-condition/terms-condition.page";
 import { HelpPage } from "../help/help.page";
@@ -104,6 +105,7 @@ import { CountdownTimerModule } from "angular-countdown-timer";
     WalletPage,
     WishlistPage,
     AllSellersPage,
+    SupportPage,
     TermsConditionPage,
     HelpPage,
     PrivacyPolicyPage,

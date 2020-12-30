@@ -49,6 +49,8 @@ import { FilterPage } from "../app/filter/filter.page";
 import { OrderSummaryPage } from "./checkout/order-summary/order-summary.page";
 import { CountdownTimerModule } from "angular-countdown-timer";
 
+// import { CountdownModule } from "ng2-date-countdown";
+
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 }

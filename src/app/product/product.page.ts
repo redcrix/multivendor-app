@@ -17,6 +17,7 @@ import { SocialSharing } from "@ionic-native/social-sharing/ngx";
 import { Vendor } from "../data/vendor";
 import { TranslateService } from "@ngx-translate/core";
 import { InAppBrowser } from "@ionic-native/in-app-browser/ngx";
+import * as moment from "moment";
 
 @Component({
   selector: "app-product",
@@ -48,7 +49,7 @@ export class ProductPage {
   variationId: any;
   numb_inp: any;
   message_bx: any;
-  date: any;
+  date = new Date();
   constructor(
     public translate: TranslateService,
     public toastController: ToastController,
@@ -75,8 +76,6 @@ export class ProductPage {
     );
   }
   getProduct() {
-    console.log(JSON.stringify("Get pro"));
-
     //     a) Time left
     // b) Auction end Date and time
     // c) Bid amount
@@ -85,9 +84,14 @@ export class ProductPage {
     this.api.postFlutterItem("product", { product_id: this.id }).subscribe(
       (res) => {
         this.product = res;
-        this.date = new Date(this.product.auction_end_date);
+        this.date = new Date("2021-01-26 00:00:00");
 
-        console.log(JSON.stringify(this.product));
+        console.log("1" + this.date);
+        const date = moment(this.product["auction_end_date"]).format(
+          "YYYY-MM-DD"
+        );
+        // date = new Date("2021-01-26T00:00:00");
+        console.log(JSON.stringify(date));
         let P_type = this.product.type;
 
         console.log(JSON.stringify(this.product));
@@ -695,9 +699,14 @@ export class ProductPage {
     return true;
   }
 
-  bidProduct(id) {
+  async bidProduct(id) {
     console.log("Only");
-
+    let Loading_ = await this.loadingController.create({
+      message: "Please wait...",
+      translucent: true,
+      cssClass: "custom-class custom-loading",
+    });
+    await Loading_.present();
     if (this.settings.customer.id) {
       let data_ = {
         bid: this.numb_inp,
@@ -710,7 +719,7 @@ export class ProductPage {
       this.api.postItem_Custom("add_bid", data_).subscribe(
         (res) => {
           // this.product = res;
-
+          Loading_.dismiss();
           this.message_bx = res["message"];
           console.log(this.message_bx);
           if (this.message_bx.length == "You have successfully bid") {
@@ -736,11 +745,13 @@ export class ProductPage {
           // }
         },
         (err) => {
+          Loading_.dismiss();
           console.log(err);
           return;
         }
       );
     } else {
+      Loading_.dismiss();
       this.presentToast("Login to bid on this product");
       return;
     }
@@ -796,5 +807,14 @@ export class ProductPage {
       return;
     }
   }
+
   /* PRODUCT ADDONS */
+
+  contactSeller() {
+    console.log(this.product.id);
+    this.settings.customer.new_pro_id = "";
+    this.settings.customer.new_pro_id = this.product.id;
+    console.log(this.settings.customer.new_pro_id);
+    this.navCtrl.navigateForward("tabs/support");
+  }
 }
