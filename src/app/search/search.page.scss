@@ -100,3 +100,33 @@ input.searchbar-input.sc-ion-searchbar-md {
   -webkit-box-shadow: none;
   --box-shadow: none;
 }
+
+ion-rating {
+  --color: gray;
+  --color-filled: green;
+}
+
+button.ac-btns {
+  height: 27px;
+  border-radius: 60px;
+  background: black;
+  color: white;
+  font-weight: bold;
+}
+button.non-ac-btns {
+  height: 27px;
+  border-radius: 60px;
+  font-weight: bold;
+}
+
+.algnn {
+  padding-bottom: 10px;
+}
+
+ion-button.md.button.button-small.button-clear.button-has-icon-only.button-disabled.ion-activatable.ion-focusable.hydrated {
+  margin-left: -19px;
+}
+
+ion-button.ios.button.button-small.button-clear.button-has-icon-only.button-disabled.ion-activatable.ion-focusable.hydrated {
+  margin-left: -19px;
+}

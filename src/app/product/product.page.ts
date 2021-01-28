@@ -18,7 +18,8 @@ import { Vendor } from "../data/vendor";
 import { TranslateService } from "@ngx-translate/core";
 import { InAppBrowser } from "@ionic-native/in-app-browser/ngx";
 import * as moment from "moment";
-
+import { formatDate } from "@angular/common";
+import { InAppBrowserOptions } from "@ionic-native/in-app-browser/ngx";
 @Component({
   selector: "app-product",
   templateUrl: "product.page.html",
@@ -26,11 +27,28 @@ import * as moment from "moment";
 })
 export class ProductPage {
   errors: any;
+  options: InAppBrowserOptions = {
+    location: "yes", //Or 'no'
+    hidden: "no", //Or  'yes'
+    clearcache: "yes",
+    clearsessioncache: "yes",
+    zoom: "yes", //Android only ,shows browser zoom controls
+    hardwareback: "yes",
+    mediaPlaybackRequiresUserAction: "no",
+    shouldPauseOnSuspend: "no", //Android only
+    closebuttoncaption: "Close", //iOS only
+    disallowoverscroll: "no", //iOS only
+    toolbar: "yes", //iOS only
+    enableViewportScale: "no", //iOS only
+    allowInlineMediaPlayback: "no", //iOS only
+    presentationstyle: "pagesheet", //iOS only
+    fullscreen: "yes", //Windows only
+  };
+
   loginForm: any = {};
   product: any;
   filter: any = {};
   usedVariationAttributes: any = [];
-  options: any = {};
   id: any;
   variations: any = [];
   groupedProducts: any = [];
@@ -50,7 +68,11 @@ export class ProductPage {
   numb_inp: any;
   message_bx: any;
   date = new Date();
+  add_comment: any;
+  starRating = 5;
+  NewUser = true;
   constructor(
+    private theInAppBrowser: InAppBrowser,
     public translate: TranslateService,
     public toastController: ToastController,
     private socialSharing: SocialSharing,
@@ -67,6 +89,9 @@ export class ProductPage {
     public vendor: Vendor,
     public iab: InAppBrowser
   ) {
+    // if (this.settings.customer.id == undefined) {
+    //   this.NewUser = true;
+    // }
     this.filter.page = 1;
     this.quantity = "1";
   }
@@ -84,17 +109,34 @@ export class ProductPage {
     this.api.postFlutterItem("product", { product_id: this.id }).subscribe(
       (res) => {
         this.product = res;
-        this.date = new Date("2021-01-26 00:00:00");
-
-        console.log("1" + this.date);
+        console.log("====" + this.product["auction_end_date"]);
         const date = moment(this.product["auction_end_date"]).format(
           "YYYY-MM-DD"
         );
-        // date = new Date("2021-01-26T00:00:00");
         console.log(JSON.stringify(date));
+        // var sliced = this.product["auction_end_date"].slice(0, 10);
+        // console.log("Sliced+" + sliced);
+        // 12 - 22 - 2222;
+
+        if (this.product["auction_end_date"] != undefined) {
+          let dd =
+            this.product["auction_end_date"].slice(6, 10) +
+            "-" +
+            this.product["auction_end_date"].slice(3, 5) +
+            "-" +
+            this.product["auction_end_date"].slice(0, 2) +
+            "T" +
+            this.product["auction_end_date"].slice(11, 19);
+
+          this.date = new Date(dd);
+          console.log(dd);
+
+          this.date = new Date(dd);
+        }
+
         let P_type = this.product.type;
 
-        console.log(JSON.stringify(this.product));
+        console.log(JSON.stringify(this.product["auction_end_date"]));
 
         if (P_type == "auction") {
           this.product_type_auction = true;
@@ -131,6 +173,37 @@ export class ProductPage {
         this.lan.lowQuantity = translations["Requested quantity not available"];
       });
     this.product = this.productData.product;
+
+    if (this.product["auction_end_date"] != undefined) {
+      console.log("====" + this.product["auction_end_date"]);
+
+      // var sliced = this.product["auction_end_date"].slice(0, 10);
+      // console.log("Sliced+" + sliced);
+      // 12 - 22 - 2222;
+      let dd =
+        this.product["auction_end_date"].slice(6, 10) +
+        "-" +
+        this.product["auction_end_date"].slice(3, 5) +
+        "-" +
+        this.product["auction_end_date"].slice(0, 2) +
+        "T" +
+        this.product["auction_end_date"].slice(11, 19);
+
+      this.date = new Date(dd);
+      console.log(dd);
+
+      this.date = new Date(dd);
+    }
+
+    // 124-12-2020 12:01:00
+
+    // const format = "yyyy-MM-dd";
+    // const myDate = dd;
+    // const locale = "en-US";
+    // const formattedDate = formatDate(myDate, format, locale);
+
+    // console.log("formattedDate+" + formattedDate);
+
     this.id = this.route.snapshot.paramMap.get("id");
     if (this.product.id) this.handleProduct();
     else this.getProduct();
@@ -543,11 +616,22 @@ export class ProductPage {
     var pages = this.router.url.split("/");
     this.navCtrl.navigateForward("/tabs/" + pages[2] + "/vendor-products");
   }
-  buyExternalProduct(id) {
-    var options = "location=no,hidden=yes,toolbar=no,hidespinner=yes";
-    let browser = this.iab.create(this.product.external_url, "_blank", options);
-    browser.show();
+  buyExternalProduct() {
+    console.log(this.product);
+
+    let url = "https://opyix.com/product/" + this.product.name;
+    this.openWithInAppBrowser(url);
+
+    // var options = "location=no,hidden=yes,toolbar=no,hidespinner=yes";
+    // let browser = this.iab.create(this.product.external_url, "_blank", options);
+    // browser.show();
   }
+
+  public openWithInAppBrowser(url: string) {
+    let target = "_blank";
+    this.theInAppBrowser.create(url, target, this.options);
+  }
+
   setGroupedProducts() {
     if (this.product.type == "grouped") {
       this.options["add-to-cart"] = this.product.id;
@@ -816,5 +900,44 @@ export class ProductPage {
     this.settings.customer.new_pro_id = this.product.id;
     console.log(this.settings.customer.new_pro_id);
     this.navCtrl.navigateForward("tabs/support");
+  }
+
+  logRatingChange(rating) {
+    console.log("changed rating: ", rating);
+    // do your stuff
+  }
+
+  Add_review() {
+    console.log(this.settings.customer.id);
+
+    if (this.settings.customer.id == undefined) {
+      this.presentToast("Login to send an enquiry");
+      return;
+    }
+
+    let data = {
+      note: this.add_comment,
+      user_id: parseInt(this.settings.customer.id),
+      rating: this.starRating,
+      product_id: this.product.id,
+    };
+    this.api.postItemNew("add_product_review", data).subscribe(
+      (res) => {
+        this.presentToast(res["message"]);
+        console.log(JSON.stringify(res));
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+  onRateChange(event) {
+    console.log("Your rate:", event);
+  }
+
+  goToReviewsPage() {
+    this.navCtrl.navigateForward(
+      "/tabs/home/product/" + this.product.id + "review/"
+    );
   }
 }

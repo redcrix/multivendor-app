@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button icon="arrow-back"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Support Tickets</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="contact">
+    <div class="contact-cont">
+      <p class="cnt" *ngIf="!dataOn">
+        No tickets found for the ordered products.
+      </p>
+    </div>
+    <div class="conte">
+      <p class="conte-txt">Contact Directly</p>
+
+      <p class="mailUs">
+        <ion-icon name="mail-outline" class="mail-cn"></ion-icon>
+        info@Opyix.com
+      </p>
+    </div>
+  </div>
+</ion-content>

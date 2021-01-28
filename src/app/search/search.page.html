@@ -5,6 +5,49 @@
       [(ngModel)]="searchInput"
       (ionChange)="onInput()"
     ></ion-searchbar>
+
+    <ion-buttons slot="end">
+      <ion-select
+        style="font-size: 13px; margin-left: -8px"
+        [(ngModel)]="select_reviews_"
+      >
+        <ion-select-option value="all">All Reviews</ion-select-option>
+        <ion-select-option value="1.00">1 Star</ion-select-option>
+        <ion-select-option value="2.00">1 Star</ion-select-option>
+        <ion-select-option value="3.00">3 Star</ion-select-option>
+        <ion-select-option value="4.00">4 Star</ion-select-option>
+        <ion-select-option value="5.00">5 Star</ion-select-option>
+      </ion-select>
+    </ion-buttons>
+
+    <ion-row>
+      <div class="algnn">
+        <button
+          class="non-ac-btns"
+          (click)="FilterByAll()"
+          *ngIf="!AllProducts_"
+        >
+          Show All Products
+        </button>
+        <button class="ac-btns" (click)="FilterByAll_()" *ngIf="AllProducts_">
+          Show All Products
+        </button>
+        <button
+          class="non-ac-btns"
+          (click)="FilterByAuction()"
+          *ngIf="!AucProducts_"
+        >
+          Auction Products
+        </button>
+        <button
+          class="ac-btns"
+          (click)="FilterByAuction_()"
+          *ngIf="AucProducts_"
+        >
+          Auction Products
+        </button>
+      </div>
+    </ion-row>
   </ion-toolbar>
 </ion-header>
 
@@ -92,6 +135,17 @@
                 ></span
               >
             </p>
+
+            <ion-row>
+              <ion-col style="text-align: center">
+                <rating
+                  [(ngModel)]="product.average_rating"
+                  readonly="true"
+                  size="small"
+                >
+                </rating>
+              </ion-col>
+            </ion-row>
           </ion-card-content>
         </ion-card>
       </ion-col>

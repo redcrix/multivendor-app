@@ -242,8 +242,6 @@ export class HomePage {
       this.navCtrl.navigateForward("/tabs/home/post/" + item.url);
   }
   getProduct(item) {
-    console.log(JSON.stringify(item));
-
     this.product.product = item;
     this.navCtrl.navigateForward("/tabs/home/product/" + item.id);
   }

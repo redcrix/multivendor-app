@@ -268,7 +268,7 @@
           expand="block"
           fill="solid"
           [disabled]="disableButton || product.stock_status == 'outofstock'"
-          (click)="buyExternalProduct(product.id)"
+          (click)="buyExternalProduct()"
           >{{"BUY NOW" | translate}}</ion-button
         >
       </div>
@@ -283,6 +283,7 @@
         >{{"CHECKOUT" | translate}}</ion-button
       >
 
+      <p class="ttl Auc" *ngIf="product.type == 'auction'">Auction ends on:</p>
       <countdown-timer
         class="timer_p"
         *ngIf="product.type == 'auction'"
@@ -296,32 +297,84 @@
         </span>
       </p> -->
 
-      <p
+      <!-- <p
         class="end_date"
         style="margin-left: 15px"
         *ngIf="product.type == 'auction'"
       >
         {{product.auction_end_date }}
-      </p>
+      </p> -->
 
       <!-- <div class="auctn" *ngIf="product_type_auction"> -->
 
-      <div class="ven_name" *ngIf="product.type != 'auction'">
+      <div class="ven_name_" *ngIf="product.type != 'auction'">
+        <!-- <p *ngIf="product.vendor.name" class="ttl">Sold by:</p> -->
+
         <!-- <div *ngFor="let c of product.vendor_info"> -->
         <p class="text_bid_vendor">{{product.vendor.name}}</p>
         <!-- </div> -->
+        <p class="ttl">Av. rating:</p>
+        <rating
+          [(ngModel)]="product.average_rating"
+          readonly="true"
+          size="default"
+        >
+        </rating>
+        <!-- <ion-icon class="staricn" name="star-outline"></ion-icon>
+        <ion-icon
+          class="staricn-y"
+          *ngIf="product.average_rating >= '2'"
+          name="star-outline"
+        ></ion-icon>
+        <ion-icon
+          class="staricn-y"
+          *ngIf="product.average_rating >= '3'"
+          name="star-outline"
+        ></ion-icon>
+        <ion-icon
+          class="staricn-y"
+          *ngIf="product.average_rating >= '4'"
+          name="star-outline"
+        ></ion-icon>
+        <ion-icon
+          class="staricn-y"
+          *ngIf="product.average_rating >= '5'"
+          name="star-outline"
+        ></ion-icon> -->
 
-        <p class="rating_">{{product.average_rating}}</p>
+        <!-- <p class="rating_">{{product.average_rating}}</p> -->
       </div>
 
-      <div class="ven_name" *ngIf="product.type == 'auction'">
+      <div class="ven_name_" *ngIf="product.type == 'auction'">
+        <!-- <p class="ttl">Sold by:</p> -->
         <!-- <div *ngFor="let c of product.vendor_info"> -->
-        <p class="text_bid_vendor">{{product.vendor_info.name}}</p>
+        <!-- <p class="text_bid_vendor">{{product.vendor_info.name}}</p> -->
         <!-- </div> -->
-
-        <p class="rating_">{{product.average_rating}}</p>
+        <p class="ttl">Av. rating:</p>
+        <ion-icon class="staricn" name="star-outline"></ion-icon>
+        <ion-icon
+          class="staricn-y"
+          *ngIf="product.average_rating >= '2'"
+          name="star-outline"
+        ></ion-icon>
+        <ion-icon
+          class="staricn-y"
+          *ngIf="product.average_rating >= '3'"
+          name="star-outline"
+        ></ion-icon>
+        <ion-icon
+          class="staricn-y"
+          *ngIf="product.average_rating >= '4'"
+          name="star-outline"
+        ></ion-icon>
+        <ion-icon
+          class="staricn-y"
+          *ngIf="product.average_rating >= '5'"
+          name="star-outline"
+        ></ion-icon>
+        <!-- <p class="rating_">{{product.average_rating}}</p> -->
       </div>
-      <div class="ven_name_btn">
+      <!-- <div class="ven_name_btn_">
         <button class="contc-btn" (click)="contactSeller()">
           <ion-icon
             name="information-circle-outline"
@@ -330,7 +383,7 @@
           ></ion-icon>
           <p class="txt-sell">Contact Seller</p>
         </button>
-      </div>
+      </div> -->
 
       <p
         class="text_bid"
@@ -364,7 +417,7 @@
         expand="block"
         fill="solid"
         [disabled]="disableButton || product.stock_status == 'outofstock'"
-        (click)="buyExternalProduct(product.id)"
+        (click)="buyExternalProduct()"
         >Buy Now For
 
         <span *ngIf="product.price">
@@ -593,6 +646,27 @@
         </div>
       </div>
     </div>
+
+    <div class="add-review" *ngIf="!NewUser">
+      <p class="txt">Add new review</p>
+
+      <rating
+        [(ngModel)]="starRating"
+        readonly="false"
+        size="default"
+        (ngModelChange)="onRateChange($event)"
+      >
+      </rating>
+
+      <ion-input
+        style="margin-left: 27px"
+        [(ngModel)]="add_comment"
+        placeholder="Your comments"
+      >
+      </ion-input>
+
+      <button class="review-bt" (click)="Add_review()">Add</button>
+    </div>
     <ion-item
       detail="true"
       (click)="getReviewsPage()"
@@ -603,6 +677,7 @@
         >{{reviews.length}} {{"Customer Reviews" | translate}}</ion-label
       >
       <ion-icon name="ios-arrow-forward" item-end></ion-icon>
+      <button class="rev-btn" (click)="goToReviewsPage()">Show Reviews</button>
     </ion-item>
     <div *ngFor="let item of reviews">
       <ion-item lines="none">

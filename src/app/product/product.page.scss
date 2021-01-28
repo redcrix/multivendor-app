@@ -24,7 +24,12 @@ ion-card-title {
 ion-card-header {
   padding: 10px;
 }
-
+countdown-timer.timer_p {
+  text-align: center;
+  margin-left: 15px;
+  font-size: 19px;
+  font-weight: bold;
+}
 .auctions_bar {
   display: flex;
 }
@@ -67,19 +72,24 @@ input.input_num.ng-untouched.ng-pristine.ng-valid {
   margin-left: 15px;
 }
 
-.ven_name {
-  display: flex;
-}
-
 input.input_num.ng-pristine.ng-valid.ng-touched {
   height: 40px;
   width: 70px;
   margin-left: 15px;
 }
+.ven_name_ {
+  margin-left: 15px;
+}
 
+p.ttl.Auc {
+  margin-left: 15px;
+}
+p.ttl {
+  margin-bottom: 3px;
+  color: gray;
+}
 .ven_name {
   margin-left: 17px;
-  background: greenyellow;
 
   height: 51px;
   width: 187px;
@@ -90,11 +100,27 @@ p.rating_ {
   background: yellow;
   border-radius: 50%;
   height: 28px;
-  width: 42px;
+  width: 183px;
   margin-top: 12px;
   padding-left: 7px;
   padding-top: 6px;
   font-size: 14px;
+}
+
+button.review-bt {
+  margin-left: 32px;
+  background: black;
+  color: white;
+  font-weight: bold;
+  height: 34px;
+  width: 77px;
+  margin-top: 23px;
+  margin-bottom: 20px;
+}
+
+p.txt {
+  text-align: center;
+  font-weight: bold;
 }
 
 .details_ {
@@ -142,7 +168,7 @@ button.contc-btn {
   margin-bottom: 12px;
 }
 p.text-details {
-  width: 100px;
+  width: 183px;
   text-align: center;
   /* border-right: 1px solid; */
   border: 1px solid;
@@ -156,7 +182,6 @@ p.text-details {
 
 p.text_bid_vendor {
   font-weight: bold;
-  margin-left: 13px;
 }
 
 input.input_num.ng-valid.ng-touched.ng-dirty {

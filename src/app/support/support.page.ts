@@ -3,6 +3,7 @@ import { LoadingController, NavController } from "@ionic/angular";
 import { ApiService } from "../api.service";
 import { Settings } from "../data/settings";
 import { Product } from "../data/product";
+import { ToastController } from "@ionic/angular";
 
 @Component({
   selector: "app-support",
@@ -21,11 +22,13 @@ export class SupportPage implements OnInit {
   objectKeys = Object.keys;
   enquiry_fill: any;
   message: any;
+  onlyEnquiry = false;
   constructor(
     public settings: Settings,
     public api: ApiService,
     public navCtrl: NavController,
-    public product: Product
+    public product: Product,
+    public toastController: ToastController
   ) {}
 
   ngOnInit() {
@@ -39,6 +42,15 @@ export class SupportPage implements OnInit {
 
   goBack() {
     this.navCtrl.back();
+  }
+
+  ionViewDidEnter() {
+    console.log(this.settings.customer.new_pro_id);
+
+    if (this.settings.customer.new_pro_id != undefined) {
+      this.onlyEnquiry = true;
+      console.log("View Enter----------------------------------");
+    }
   }
 
   getCatego_() {
@@ -113,7 +125,38 @@ export class SupportPage implements OnInit {
     this.navCtrl.navigateForward("/tabs/home/product/" + item.id);
   }
 
+  sendReq_Enq() {
+    console.log(this.settings.customer.id);
+
+    if (this.settings.customer.id == undefined) {
+      this.presentToast("Login to send an enquiry");
+      return;
+    }
+    let data = [
+      {
+        enquiry: this.enquiry_fill,
+        product_id: parseInt(this.settings.customer.new_pro_id),
+        customer_id: parseInt(this.settings.customer.id),
+      },
+    ];
+
+    this.api.postItemNew("add_product_enquiry", data).subscribe(
+      (res) => {
+        this.message = res["message"];
+        console.log(JSON.stringify(res));
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
   sendReq() {
+    if (this.settings.customer.id == undefined) {
+      this.presentToast("Login to send an enquiry");
+      return;
+    }
+
     console.log(this.settings.customer.new_pro_id);
 
     let data = {
@@ -125,7 +168,7 @@ export class SupportPage implements OnInit {
       customer_id: this.settings.customer.id,
     };
 
-    this.api.post_data_API("create_support_ticket", data).subscribe(
+    this.api.postItemNew("create_support_ticket", data).subscribe(
       (res) => {
         this.message = res["message"];
         console.log(JSON.stringify(res));
@@ -134,5 +177,13 @@ export class SupportPage implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  async presentToast(m) {
+    const toast = await this.toastController.create({
+      message: m,
+      duration: 4000,
+    });
+    toast.present();
   }
 }

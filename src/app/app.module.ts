@@ -32,8 +32,8 @@ import { HomePage } from "./home/home.page";
 import { HTTP } from "@ionic-native/http/ngx";
 
 //Uncomment when you use Google Login
-//import { GooglePlus } from '@ionic-native/google-plus/ngx';
-//import { Facebook } from '@ionic-native/facebook/ngx';
+// import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { Facebook } from "@ionic-native/facebook/ngx";
 
 //vendor
 import { ImagePicker } from "@ionic-native/image-picker/ngx";
@@ -48,6 +48,8 @@ import {
 import { FilterPage } from "../app/filter/filter.page";
 import { OrderSummaryPage } from "./checkout/order-summary/order-summary.page";
 import { CountdownTimerModule } from "angular-countdown-timer";
+
+import { IonicRatingModule } from "ionic4-rating";
 
 // import { CountdownModule } from "ng2-date-countdown";
 
@@ -69,7 +71,7 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   imports: [
     BrowserModule,
-
+    IonicRatingModule,
     FormsModule,
     HttpClientModule,
     KeysPipeModule,
@@ -91,7 +93,7 @@ export function createTranslateLoader(http: HttpClient) {
     HomePage,
     //Braintree,
     //GooglePlus,
-    //Facebook,
+    Facebook,
     OneSignal,
     NativeStorage,
     InAppBrowser,

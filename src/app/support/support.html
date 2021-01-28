@@ -17,9 +17,12 @@
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
+  <p class="txt">
+    Got a question for us? We normally respond within a few hours.
+  </p>
   <div class="container">
     <div class="modal-pop">
-      <div class="item-cl">
+      <div class="item-cl" *ngIf="!onlyEnquiry">
         <p class="txt-he">Select Category</p>
         <ion-select multiple="false" [(ngModel)]="valSelCat">
           <ion-select-option
@@ -30,7 +33,7 @@
         </ion-select>
       </div>
 
-      <div class="item-cl">
+      <div class="item-cl" *ngIf="!onlyEnquiry">
         <p class="txt-he">Select Priority</p>
         <ion-select multiple="false" [(ngModel)]="valSel">
           <ion-select-option
@@ -49,9 +52,14 @@
       </div>
 
       <p class="err-txt">{{message}}</p>
-      <ion-row>
+      <ion-row *ngIf="!onlyEnquiry">
         <ion-col style="text-align: center">
           <ion-button class="btncl" (click)="sendReq()">Send</ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="onlyEnquiry">
+        <ion-col style="text-align: center">
+          <ion-button class="btncl" (click)="sendReq_Enq()">Send</ion-button>
         </ion-col>
       </ion-row>
     </div>

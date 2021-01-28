@@ -2,6 +2,13 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button icon="arrow-back"></ion-back-button>
+
+      <ion-icon
+        *ngIf="proShow"
+        (click)="backNow()"
+        class="bckIc"
+        name="arrow-back-outline"
+      ></ion-icon>
     </ion-buttons>
 
     <ion-title> All Sellers</ion-title>
@@ -12,92 +19,103 @@
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
-  <div class="container">
-    <!-- <div *ngFor="let tag of ven_datas">
+  <div *ngIf="!proShow">
+    <div class="container" *ngIf="dataOn">
+      <!-- <div *ngFor="let tag of ven_datas">
       Let: {{tag.store_name}}
       <div *ngFor="let n of tag.products">Let: {{n.name}}</div>
     </div> -->
 
-    <div class="all_vendors_auctions" *ngFor="let c of ven_datas">
-      <!-- <p>{{c.store_info.store_name}}</p> -->
+      <div class="all_vendors_auctions" *ngFor="let c of all_vendors_">
+        <!-- <p>{{c.store_info.store_name}}</p> -->
 
-      <div class="header">
-        <p class="title-s">Store Name:</p>
-        <p class="Auctions-">
-          <ion-icon
-            class="icon_down"
-            name="arrow-down-circle-outline"
-          ></ion-icon
-          >{{c.store_name}}
-        </p>
+        <div
+          class="header"
+          (click)="viewPros(c.products, c.store_info.store_name)"
+        >
+          <p class="title-s">Store Name:</p>
+          <p class="Auctions-">
+            <ion-icon
+              class="icon_down"
+              name="arrow-down-circle-outline"
+            ></ion-icon
+            >{{c.store_info.store_name}}
+          </p>
 
-        <p class="cus-supp">{{c.customer_support.email}}</p>
-      </div>
-
-      <div class="scroll-related-products">
-        <div class="product" *ngFor="let item of prod_data">
-          <ion-card
-            mode="md"
-            class="ion-activatable ion-focusable hydrated {{settings.settings.product_shadow}}"
-            [style.border-radius.px]="settings.dimensions.productBorderRadius"
-          >
-            <ion-card-content>
-              <ion-img
-                alt=""
-                *ngIf="item.images?.length"
-                [src]="item.images[0].src"
-                (click)="getProduct(item)"
-                [style.height.px]="settings.dimensions.homeSliderHeight"
-              ></ion-img>
-              <ion-img
-                alt=""
-                [style.height.px]="settings.dimensions.homeSliderHeight"
-                *ngIf="!item.images?.length"
-                src="assets/image/logo.png"
-                (click)="getProduct(item)"
-              ></ion-img
-              ><ion-icon
-                name="heart-outline"
-                mode="md"
-                class="wishlist-button-grid"
-                *ngIf="!settings.wishlist[item.id]"
-                (click)="settings.addToWishlist(item.id)"
-              ></ion-icon>
-              <ion-icon
-                name="heart"
-                color="{{settings.theme.button}}"
-                mode="md"
-                class="wishlist-button-grid"
-                *ngIf="settings.wishlist[item.id]"
-                (click)="settings.removeFromWishlist(item.id)"
-              ></ion-icon>
-              <ion-button
-                color="danger"
-                class="stock"
-                *ngIf="item.stock_status == 'outofstock'"
-                >{{"No Stock" | translate}}</ion-button
-              >
-            </ion-card-content>
-            <ion-card-header (click)="getProduct(item)">
-              <ion-card-title mode="md">{{item.name}}</ion-card-title>
-            </ion-card-header>
-            <ion-card-content (click)="getProduct(item)">
-              <p class="price">
-                <span
-                  class="regular-price"
-                  *ngIf="!item.sale_price"
-                  [innerHTML]="item.formated_price"
-                ></span>
-                <span class="regular-price" *ngIf="item.sale_price"
-                  ><span [innerHTML]="item.formated_sales_price"></span
-                  ><span class="special-price"
-                    ><del [innerHTML]="item.formated_price"></del></span
-                ></span>
-              </p>
-            </ion-card-content>
-          </ion-card>
+          <p class="cus-supp">{{c.store_info.customer_support.email}}</p>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div *ngIf="proShow">
+    <p class="store-nametxt">{{store_name}}</p>
+    <p class="emptxt" *ngIf="pro_dataD.length == 0">No products</p>
+  </div>
+  <div class="scroll-related-products" *ngIf="proShow">
+    <div class="product" *ngFor="let pro_data of pro_dataD">
+      <ion-card
+        mode="md"
+        class="ion-activatable ion-focusable hydrated {{settings.settings.product_shadow}}"
+        [style.border-radius.px]="settings.dimensions.productBorderRadius"
+      >
+        <ion-card-content>
+          <ion-img
+            alt=""
+            *ngIf="pro_data.images?.length"
+            [src]="pro_data.images[0].src"
+            (click)="getProduct(pro_data)"
+            [style.height.px]="settings.dimensions.homeSliderHeight"
+          ></ion-img>
+          <ion-img
+            alt=""
+            [style.height.px]="settings.dimensions.homeSliderHeight"
+            *ngIf="!pro_data.images?.length"
+            src="assets/image/logo.png"
+            (click)="getProduct(pro_data)"
+          ></ion-img
+          ><ion-icon
+            name="heart-outline"
+            mode="md"
+            class="wishlist-button-grid"
+            *ngIf="!settings.wishlist[pro_data.id]"
+            (click)="settings.addToWishlist(pro_data.id)"
+          ></ion-icon>
+          <ion-icon
+            name="heart"
+            color="{{settings.theme.button}}"
+            mode="md"
+            class="wishlist-button-grid"
+            *ngIf="settings.wishlist[pro_data.id]"
+            (click)="settings.removeFromWishlist(pro_data.id)"
+          ></ion-icon>
+          <ion-button
+            color="danger"
+            class="stock"
+            *ngIf="pro_data.stock_status == 'outofstock'"
+            >{{"No Stock" | translate}}</ion-button
+          >
+        </ion-card-content>
+
+        <!-- <p class="name">{{pro_data.name}}</p> -->
+        <ion-card-header (click)="getProduct(pro_data)">
+          <ion-card-title mode="md">{{pro_data.name}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content (click)="getProduct(pro_data)">
+          <p class="price">
+            <span
+              class="regular-price"
+              *ngIf="!pro_data.sale_price"
+              [innerHTML]="pro_data.formated_price"
+            ></span>
+            <span class="regular-price" *ngIf="pro_data.sale_price"
+              ><span [innerHTML]="pro_data.formated_sales_price"></span
+              ><span class="special-price"
+                ><del [innerHTML]="ipro_data.formated_price"></del></span
+            ></span>
+          </p>
+        </ion-card-content>
+      </ion-card>
     </div>
   </div>
 </ion-content>

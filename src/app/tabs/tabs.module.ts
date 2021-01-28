@@ -56,15 +56,20 @@ import { SubcategoryPage } from "./../vendor/product-add/subcategory/subcategory
 
 import { TestSitePage } from "./../account/test-site/test-site.page";
 
+// import { SupportPage } from "../product-reviews/support.page";
 import { SupportPage } from "../support/support.page";
 import { AllSellersPage } from "../all-sellers/all-sellers.page";
 import { TermsConditionPage } from "../terms-condition/terms-condition.page";
 import { HelpPage } from "../help/help.page";
+import { TicketsPage } from "../tickets/tickets.page";
 import { PrivacyPolicyPage } from "../privacy-policy/privacy-policy.page";
 import { CountdownTimerModule } from "angular-countdown-timer";
 
+import { IonicRatingModule } from "ionic4-rating";
+
 @NgModule({
   imports: [
+    IonicRatingModule,
     CountdownTimerModule,
     IonicModule,
     CommonModule,
@@ -108,6 +113,7 @@ import { CountdownTimerModule } from "angular-countdown-timer";
     SupportPage,
     TermsConditionPage,
     HelpPage,
+    TicketsPage,
     PrivacyPolicyPage,
     // Vendors
     EditOrderPage,

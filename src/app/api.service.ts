@@ -101,6 +101,19 @@ export class ApiService {
     );
   }
 
+  postItemNew(endPoint, data = {}) {
+    var params = new HttpParams();
+    for (var key in data) {
+      if ("object" !== typeof data[key]) params = params.set(key, data[key]);
+    }
+    params = params.set("lang", this.config.lang);
+    const url = this.config.url + "/wp-json/rest-api/v1/" + endPoint;
+    return this.http.post(url, params, this.config.options).pipe(
+      tap((_) => {}),
+      catchError(this.handleError(endPoint))
+    );
+  }
+
   postItem_Custom(endPoint, data = {}) {
     var params = new HttpParams();
     for (var key in data) {
