@@ -10,6 +10,9 @@ p.cnt {
   font-size: 23px;
   color: var(--ion-color-primary);
 }
+.contact {
+  background: #d3d3d33b;
+}
 
 ion-content.ios.overscroll.hydrated {
   --background: #d7d8da;
@@ -19,17 +22,29 @@ ion-content.md.overscroll.hydrated {
   --background: #d7d8da;
 }
 .contact-cont {
-  width: 201px;
-  border-radius: 10px;
-  /* padding-left: 18px; */
   padding-top: 2px;
-  height: 99px;
-  background: white;
   margin-left: 20px;
-  margin-top: 30px;
+  margin-right: 20px;
 }
+.card {
+  border-radius: 10px;
+  padding-left: 18px;
+  padding-top: 2px;
+  background: white;
+  padding-bottom: 10px;
+}
+
 img.con-im {
   height: 320px;
+}
+.info_title {
+  font-weight: bold;
+  color: gray;
+  font-size: 13px;
+}
+
+.info_data {
+  margin-top: -13px;
 }
 
 .conte {

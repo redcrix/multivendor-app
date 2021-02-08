@@ -23,6 +23,7 @@ export class SupportPage implements OnInit {
   enquiry_fill: any;
   message: any;
   onlyEnquiry = false;
+  NormalEnquiry = false;
   constructor(
     public settings: Settings,
     public api: ApiService,
@@ -44,11 +45,22 @@ export class SupportPage implements OnInit {
     this.navCtrl.back();
   }
 
+  reviewchn() {
+    if (this.settings.customer.NormalEnquiry == true) {
+      this.NormalEnquiry = true;
+      this.onlyEnquiry = true;
+    } else {
+      this.NormalEnquiry = false;
+      this.onlyEnquiry = false;
+    }
+  }
+
   ionViewDidEnter() {
     console.log(this.settings.customer.new_pro_id);
 
     if (this.settings.customer.new_pro_id != undefined) {
-      this.onlyEnquiry = true;
+      this.onlyEnquiry = false;
+      this.reviewchn();
       console.log("View Enter----------------------------------");
     }
   }
@@ -132,13 +144,11 @@ export class SupportPage implements OnInit {
       this.presentToast("Login to send an enquiry");
       return;
     }
-    let data = [
-      {
-        enquiry: this.enquiry_fill,
-        product_id: parseInt(this.settings.customer.new_pro_id),
-        customer_id: parseInt(this.settings.customer.id),
-      },
-    ];
+    let data = {
+      enquiry: this.enquiry_fill,
+      product_id: parseInt(this.settings.customer.new_pro_id),
+      customer_id: parseInt(this.settings.customer.id),
+    };
 
     this.api.postItemNew("add_product_enquiry", data).subscribe(
       (res) => {
@@ -162,10 +172,10 @@ export class SupportPage implements OnInit {
     let data = {
       support_category: parseInt(this.valSelCat),
       support_priority: this.valSel,
-      support_product: this.settings.customer.new_pro_id,
-      order_id: 1784,
+      support_product: parseInt(this.settings.customer.new_pro_id),
+      order_id: parseInt(this.settings.customer.new_Order_id),
       query: this.enquiry_fill,
-      customer_id: this.settings.customer.id,
+      customer_id: parseInt(this.settings.customer.id),
     };
 
     this.api.postItemNew("create_support_ticket", data).subscribe(

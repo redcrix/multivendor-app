@@ -32,7 +32,7 @@ import { HomePage } from "./home/home.page";
 import { HTTP } from "@ionic-native/http/ngx";
 
 //Uncomment when you use Google Login
-// import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { GooglePlus } from "@ionic-native/google-plus/ngx";
 import { Facebook } from "@ionic-native/facebook/ngx";
 
 //vendor
@@ -92,7 +92,7 @@ export function createTranslateLoader(http: HttpClient) {
     SplashScreen,
     HomePage,
     //Braintree,
-    //GooglePlus,
+    GooglePlus,
     Facebook,
     OneSignal,
     NativeStorage,

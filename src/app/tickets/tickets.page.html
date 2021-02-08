@@ -4,6 +4,10 @@
       <ion-back-button icon="arrow-back"></ion-back-button>
     </ion-buttons>
     <ion-title>Support Tickets</ion-title>
+
+    <ion-buttons slot="end" (click)="close_()">
+      <ion-icon class="cart_icn" name="close-outline"></ion-icon>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -13,6 +17,47 @@
       <p class="cnt" *ngIf="!dataOn">
         No tickets found for the ordered products.
       </p>
+
+      <div class="tickets">
+        <div class="card" *ngFor="let t of tickets_data">
+          <div class="labels">
+            <p class="info_title">Ticket Id:</p>
+            <p class="info_data">{{t.ticket_id}}</p>
+          </div>
+
+          <div class="labels">
+            <p class="info_title">Status:</p>
+            <p class="info_data">{{t.status}}</p>
+          </div>
+
+          <div class="labels">
+            <p class="info_title">Category:</p>
+            <p class="info_data">{{t.category}}</p>
+          </div>
+
+          <div class="labels">
+            <p class="info_title">Priority:</p>
+            <p class="info_data">{{t.priority}}</p>
+          </div>
+
+          <div class="labels">
+            <p class="info_title">Query:</p>
+            <p class="info_data">{{t.query}}</p>
+          </div>
+
+          <div class="labels">
+            <p class="info_title">Order id:</p>
+            <p class="info_data">{{t.order_id}}</p>
+          </div>
+
+          <div class="labels">
+            <p class="info_title">Opened on:</p>
+            <p class="info_data">{{t.posted}}</p>
+          </div>
+
+          <img src="t.thumbnail" class="thumbn" />
+        </div>
+      </div>
     </div>
     <div class="conte">
       <p class="conte-txt">Contact Directly</p>

@@ -262,7 +262,7 @@
           >{{"ADD TO CART" | translate}}</ion-button
         >
 
-        <ion-button
+        <!-- <ion-button
           class="add-to-cart-button"
           color="{{settings.theme.button}}"
           expand="block"
@@ -270,7 +270,7 @@
           [disabled]="disableButton || product.stock_status == 'outofstock'"
           (click)="buyExternalProduct()"
           >{{"BUY NOW" | translate}}</ion-button
-        >
+        > -->
       </div>
 
       <ion-button
@@ -374,16 +374,16 @@
         ></ion-icon>
         <!-- <p class="rating_">{{product.average_rating}}</p> -->
       </div>
-      <!-- <div class="ven_name_btn_">
+      <div class="ven_name_btn_">
         <button class="contc-btn" (click)="contactSeller()">
           <ion-icon
             name="information-circle-outline"
             class="info-ic"
             style="color: white"
           ></ion-icon>
-          <p class="txt-sell">Contact Seller</p>
+          <p class="txt-sell">Send Enquiry</p>
         </button>
-      </div> -->
+      </div>
 
       <p
         class="text_bid"
@@ -410,7 +410,7 @@
           >
         </div>
       </div>
-      <ion-button
+      <!-- <ion-button
         *ngIf="product.type == 'auction'"
         class="custom-button"
         color="primary"
@@ -423,7 +423,7 @@
         <span *ngIf="product.price">
           {{product.price | currency:settings.currency}}</span
         >
-      </ion-button>
+      </ion-button> -->
       <p class="text_bid" *ngIf="product.type == 'auction'">
         This product does not have a reserve price.
       </p>

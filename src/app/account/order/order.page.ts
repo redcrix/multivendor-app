@@ -21,7 +21,10 @@ export class OrderPage implements OnInit {
   refundResponse: any = {};
   lan: any = {};
   starRating = 5;
+  starRatingVendor = 5;
+  add_commentVendor: any;
   add_comment: any;
+  Review_Vendor_title: any;
   constructor(
     public translate: TranslateService,
     public api: ApiService,
@@ -95,9 +98,11 @@ export class OrderPage implements OnInit {
 
   contactSeller() {
     console.log(JSON.stringify(this.order));
-    alert(JSON.stringify(this.order));
+    // alert(JSON.stringify(this.order));
+    this.settings.customer.new_Order_id = "";
+    this.settings.customer.new_Order_id = this.order.id;
     this.settings.customer.new_pro_id = "";
-    this.settings.customer.new_pro_id = this.order.id;
+    this.settings.customer.new_pro_id = this.order.line_items[0].id;
     console.log(this.settings.customer.new_pro_id);
     this.navCtrl.navigateForward("tabs/support");
   }
@@ -131,13 +136,46 @@ export class OrderPage implements OnInit {
       }
     );
   }
+
+  Add_review_Vendor() {
+    if (this.settings.customer.id == undefined) {
+      this.presentToast("Login to send an enquiry");
+      return;
+    }
+
+    let data = {
+      vendor_id: 9,
+      author_id: parseInt(this.settings.customer.id),
+      store_review_comment: this.add_commentVendor,
+      review_title: this.Review_Vendor_title,
+      review_rating: this.starRatingVendor,
+    };
+
+    this.api.postItemNew("add_vendor_review", data).subscribe(
+      (res) => {
+        this.presentToast(res["message"]);
+        console.log(JSON.stringify(res));
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
   onRateChange(event) {
     console.log("Your rate:", event);
   }
 
   goToReviewsPage(n) {
     console.log(JSON.stringify(n));
-
-    this.navCtrl.navigateForward("/tabs/home/product/" + n.id + "review/");
+    this.settings.customer.Is_add_review_visible = "";
+    this.settings.customer.Is_add_review_visible = true;
+    this.settings.customer.new_pro_id = "";
+    this.settings.customer.new_pro_id = n.id;
+    this.settings.customer.new_Order_id = "";
+    this.settings.customer.new_Order_id = this.order.id;
+    // alert(JSON.stringify(n));
+    this.navCtrl.navigateForward(
+      "/tabs/home/product/" + parseInt(n.id) + "/review/"
+    );
   }
 }

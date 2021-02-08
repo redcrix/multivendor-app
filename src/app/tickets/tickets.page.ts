@@ -70,7 +70,7 @@ export class TicketsPage implements OnInit {
         Loading_.dismiss();
 
         this.tickets_data = [];
-        this.tickets_data = res;
+        this.tickets_data = res["tickets"];
         console.log(JSON.stringify(this.tickets_data));
         this.dataOn = true;
       },

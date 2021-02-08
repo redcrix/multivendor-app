@@ -895,7 +895,13 @@ export class ProductPage {
   /* PRODUCT ADDONS */
 
   contactSeller() {
+    if (this.settings.customer.id == undefined) {
+      this.presentToast("Login to send an enquiry");
+      return;
+    }
     console.log(this.product.id);
+    this.settings.customer.NormalEnquiry = "";
+    this.settings.customer.NormalEnquiry = true;
     this.settings.customer.new_pro_id = "";
     this.settings.customer.new_pro_id = this.product.id;
     console.log(this.settings.customer.new_pro_id);

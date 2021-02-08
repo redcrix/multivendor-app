@@ -27,6 +27,7 @@
     "@ionic-native/email-composer": "^5.21.5",
     "@ionic-native/facebook": "^5.30.0",
     "@ionic-native/file-transfer": "^5.22.0",
+    "@ionic-native/google-plus": "^5.31.1",
     "@ionic-native/http": "^5.21.5",
     "@ionic-native/image-picker": "^5.22.0",
     "@ionic-native/in-app-browser": "^5.21.5",
@@ -39,8 +40,9 @@
     "@ngx-translate/core": "^12.1.1",
     "@ngx-translate/http-loader": "^4.0.0",
     "angular-countdown-timer": "0.0.1",
-    "cordova-android": "8.1.0",
+    "cordova-android": "^8.1.0",
     "cordova-browser": "6.0.0",
+    "cordova-custom-config": "^5.1.0",
     "cordova-plugin-advanced-http": "^2.4.1",
     "cordova-plugin-appminimize": "^1.0.1",
     "cordova-plugin-apprate": "^1.5.0",
@@ -50,8 +52,10 @@
     "cordova-plugin-facebook4": "^6.4.0",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-file-transfer": "^1.7.1",
+    "cordova-plugin-googleplus": "^8.5.1",
     "cordova-plugin-inappbrowser": "^3.2.0",
     "cordova-plugin-nativestorage": "^2.3.2",
+    "cordova-plugin-paystack": "^3.2.0",
     "cordova-plugin-statusbar": "^2.4.3",
     "cordova-plugin-telerik-imagepicker": "^2.3.3",
     "cordova-plugin-x-socialsharing": "^5.6.4",
@@ -127,7 +131,13 @@
       "cordova-plugin-facebook4": {
         "APP_ID": "299120978099633",
         "APP_NAME": "Opyix"
-      }
+      },
+      "cordova-plugin-googleplus": {
+        "REVERSED_CLIENT_ID": "com.opyix.app",
+        "WEB_APPLICATION_CLIENT_ID": "984104447203-t47u8d4o7l16ceck46djnd7gf634quaf.apps.googleusercontent.com"
+      },
+      "cordova-custom-config": {},
+      "cordova-plugin-paystack": {}
     },
     "platforms": [
       "browser",

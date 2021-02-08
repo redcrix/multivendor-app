@@ -72,18 +72,7 @@
       <ion-label>{{"Payment Method" | translate}}</ion-label>
     </ion-list-header>
 
-    <div class="ven_name_btn_">
-      <button class="contc-btn" (click)="contactSeller()">
-        <ion-icon
-          name="information-circle-outline"
-          class="info-ic"
-          style="color: white"
-        ></ion-icon>
-        <p class="txt-sell">Contact Seller</p>
-      </button>
-    </div>
-
-    <div class="add-review">
+    <!-- <div class="add-review">
       <p class="txt">Add new review</p>
 
       <rating
@@ -102,7 +91,7 @@
       </ion-input>
 
       <button class="review-bt" (click)="Add_review()">Add</button>
-    </div>
+    </div> -->
 
     <ion-item>
       <ion-label text-wrap>
@@ -147,16 +136,52 @@
       >
     </div>
 
+    <div class="ven_name_btn_">
+      <button class="contc-btn" (click)="contactSeller()">
+        <p class="txt-sell">Contact Seller</p>
+      </button>
+    </div>
+
+    <div class="add-review-Vendor">
+      <p class="txt-Add-Ven">Add Seller Review</p>
+
+      <rating
+        [(ngModel)]="starRatingVendor"
+        readonly="false"
+        size="default"
+        (ngModelChange)="onRateChange($event)"
+      >
+      </rating>
+
+      <ion-input
+        style="margin-left: 27px"
+        [(ngModel)]="Review_Vendor_title"
+        placeholder="Review title"
+      >
+      </ion-input>
+
+      <ion-input
+        style="margin-left: 27px"
+        [(ngModel)]="add_commentVendor"
+        placeholder="Your comments"
+      >
+      </ion-input>
+
+      <ion-row>
+        <ion-col style="text-align: center">
+          <button class="review-bt" (click)="Add_review_Vendor()">
+            Add
+          </button></ion-col
+        >
+      </ion-row>
+    </div>
+
     <ion-list-header>
       <ion-label>{{"Items" | translate}}</ion-label>
     </ion-list-header>
     <ion-item>
-      <ion-label text-wrap>
-        <p *ngFor="let item of order.line_items">
-          <button class="rev-btn" (click)="goToReviewsPage(item)">
-            Show All Reviews Product Wise
-          </button>
-
+      <ion-label text-wrap *ngFor="let item of order.line_items">
+        <p>
           {{item.name}}
           <span *ngFor="let meta of item.meta_data">{{meta.value}} </span> x
           {{item.quantity}}
@@ -164,6 +189,10 @@
             >{{item.total | currency:settings.currency:'symbol':'1.2-2'}}</span
           >
         </p>
+
+        <button class="rev-btn" (click)="goToReviewsPage(item)">
+          Add product review
+        </button>
       </ion-label>
     </ion-item>
     <ion-list-header>
