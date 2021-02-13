@@ -154,12 +154,12 @@ export class CheckoutPage implements OnInit {
       this.setStripeForm();
       console.log(
         "setStripeForm Get Token and see the form data" +
-          JSON.stringify(this.stripeForm)
+          this.stripeForm
       );
 
-      console.log(JSON.stringify(this.checkoutData.form.expiryYear));
-      console.log(JSON.stringify(this.checkoutData.form.payment_method));
-      console.log(JSON.stringify(this.checkoutData.form));
+      console.log(this.checkoutData.form.expiryYear);
+      console.log(this.checkoutData.form.payment_method);
+      console.log(this.checkoutData.form);
       this.chargePaystackCard();
       //   this.stripePlaceOrder(res);
 
@@ -474,7 +474,7 @@ export class CheckoutPage implements OnInit {
   stripePlaceOrder(src) {
     console.log(JSON.stringify(src));
 
-    if (src && src.id) {
+   /*  if (src && src.id) {
       this.checkoutData.form["paystack_source"] = src.id;
       this.checkoutData.form["stripe_source"] = src.id;
       this.api
@@ -485,6 +485,28 @@ export class CheckoutPage implements OnInit {
             this.handleOrder();
           },
           (err) => {
+            this.disableButton = false;
+          }
+        );
+    } else {
+      this.disableButton = false;
+      this.errorMessage = "Cannot handle payment, Please check card details";
+    }
+ */
+    if (src && src.reference) {
+      this.checkoutData.form["paystack_source"] = src.reference;
+      this.checkoutData.form['wcfmmp_user_location'] = "Test"
+   //   this.checkoutData.form["stripe_source"] = src.reference;
+      this.api
+        .ajaxCall("/checkout?wc-ajax=checkout", this.checkoutData.form)
+        .subscribe(
+          (res) => {
+            this.results = res;
+            this.handleOrder();
+          },
+          (err) => {
+            alert("err");
+            console.log(err);
             this.disableButton = false;
           }
         );
@@ -634,21 +656,23 @@ export class CheckoutPage implements OnInit {
             this.stripePlaceOrder(resp);
 
             alert("Payment Was Successful");
+            this.stripePlaceOrder(resp);
           },
 
           (resp) => {
             // loader.dismiss();
-
-            alert("We Encountered An Error While Charging Your Card" + resp);
+            console.log(resp);
+            alert("We Encountered An Error While Charging Your Card.." + resp.error);
           },
 
           {
-            cardNumber: card,
-            expiryMonth: month,
-            expiryYear: year,
-            cvc: cvc,
-            email: this.settings.customer.billing_email,
+            cardNumber: this.checkoutData.form['authnet-card-number'],
+            expiryMonth: this.checkoutData.form.expiryMonth,
+            expiryYear: this.checkoutData.form.expiryYear,
+            cvc: this.checkoutData.form['authnet-card-cvc'],
+            email: 'test@email.com', //do this dynamic
             amountInKobo: this.orderReview.totals.total,
+        
           }
         );
       } else {

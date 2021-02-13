@@ -94,7 +94,7 @@ export class LoginPage implements OnInit {
     this.googlePlus
       .login({})
       .then((res) => {
-        alert(JSON.stringify(res));
+        console.log(JSON.stringify(res));
         this.googleStatus = res;
         this.api
           .postItem("google_login", {
@@ -108,7 +108,7 @@ export class LoginPage implements OnInit {
           .subscribe(
             (res) => {
               this.status = res;
-              alert(JSON.stringify(this.status));
+              console.log(JSON.stringify(this.status));
               if (this.status.errors) {
                 this.errors = this.status.errors;
               } else if (this.status.data) {
@@ -140,6 +140,7 @@ export class LoginPage implements OnInit {
         this.googleLogingInn = false;
       })
       .catch((err) => {
+        console.log(err);
         this.googleStatus = err;
         this.googleLogingInn = false;
       });
