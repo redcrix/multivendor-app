@@ -2,6 +2,24 @@
 // http://ionicframework.com/docs/theming/
 
 /** Ionic CSS Variables **/
+@font-face {
+  font-family: Poppins-black;
+  src: url("../assets/Fonts/Poppins/Poppins-Black.ttf");
+}
+
+@font-face {
+  font-family: Poppins-b;
+  src: url("../assets/Fonts/Poppins/Poppins-Bold.ttf");
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url("../assets/Fonts/Poppins/Poppins-Light.ttf");
+}
+
+.p {
+  font-family: Poppins !important;
+}
 :root {
   --ion-color-white: #fff;
   --account-header: #fff;

@@ -1,25 +1,76 @@
 <ion-header mode="ios">
   <ion-toolbar>
-    <ion-title style="text-align: center">
+    <!-- <ion-title style="text-align: center">
       <img src="../../assets/logo-3.png" class="logo" />
-    </ion-title>
-    <ion-buttons slot="end" *ngIf="!allContent" (click)="close_deals_page()">
-      <ion-icon class="cart_icn" name="close-outline"></ion-icon>
+    </ion-title> -->
+
+    <div class="content-main-header">
+      <ion-searchbar
+        showCancelButton="focus"
+        placeholder="Search for Products"
+        class="inp-c"
+        style="
+          border-radius: 7px;
+          margin-bottom: 10px;
+          margin-top: 12px;
+          width: 245px;
+        "
+        (ionInput)="filterItems($event)"
+      ></ion-searchbar>
+    </div>
+    <ion-buttons slot="end">
+      <ion-icon
+        class="cart-icon"
+        (click)="cart_page()"
+        name="cart-outline"
+      ></ion-icon>
+
+      <ion-icon
+        *ngIf="!allContent"
+        (click)="close_deals_page()"
+        class="cart_icn"
+        name="close-outline"
+      ></ion-icon>
     </ion-buttons>
   </ion-toolbar>
   <div class="btns">
-    <button class="btn-top" (click)="go_bookmarkPage()">
-      <ion-icon class="icn_" name="heart-outline"></ion-icon>
-      <span class="txt_"> Saved </span>
-    </button>
-    <button class="btn-top" (click)="go_CategoriesPage()">
-      <ion-icon class="icn_" name="grid-outline"></ion-icon>
-      <span class="txt_"> Categories </span>
-    </button>
-    <button class="btn-top" (click)="go_DealsPage()">
-      <ion-icon class="icn_" name="heart-outline"></ion-icon>
-      <span class="txt_"> Deals </span>
-    </button>
+    <div class="cont-in-top">
+      <button class="btn-top saved" (click)="go_bookmarkPage()">
+        <ion-icon class="icn_" name="heart-outline"></ion-icon>
+      </button>
+      <!-- <span class="txt_"> Saved </span> -->
+    </div>
+
+    <div class="cont-in-top">
+      <button class="btn-top cat" (click)="go_CategoriesPage()">
+        <ion-icon class="icn_" name="grid-outline"></ion-icon>
+      </button>
+      <!-- <span class="txt_ cat"> Categories </span> -->
+    </div>
+
+    <div class="cont-in-top">
+      <button class="btn-top deals" (click)="go_Menu('1')">
+        <ion-icon class="icn_" name="pricetags-outline"></ion-icon>
+      </button>
+      <!-- <span class="txt_ deals"> Deals </span> -->
+    </div>
+
+    <div class="cont-in-top">
+      <button class="btn-top" (click)="go_Menu('2')">
+        <img src="../../assets/image/icons8-star-48.png" class="img-cin-top" />
+      </button>
+      <!-- <span class="txt_"> Premium </span> -->
+    </div>
+
+    <div class="cont-in-top">
+      <button class="btn-top" (click)="go_Menu('3')">
+        <img
+          src="../../assets/image/icons8-reseller-16.png"
+          class="img-cin-top"
+        />
+      </button>
+      <!-- <span class="txt_"> Seller </span> -->
+    </div>
   </div>
 </ion-header>
 
@@ -151,17 +202,30 @@
         [style.padding]="children.padding"
         class="banner_block"
       >
-        <div
-          class="{{children.header_align}}"
-          [style.color]="children.title_color"
-        >
-          {{children.title}}
-        </div>
         <!-- Banner Slider -->
-        <div *ngIf="children.children?.length && children.style == 'slider'">
-          <ion-slides pager="true" [options]="slideOpts" dir="{{settings.dir}}">
-            <ion-slide *ngFor="let image of children.children">
+        <div
+          class="bg-color-slide-bn"
+          *ngIf="children.children?.length && children.style == 'slider'"
+        >
+          <ion-slides
+            [options]="{ slidesPerView: 'auto', zoom: false, grabCursor: true }"
+            class="slides-banner"
+            pager="true"
+            [options]="slideOpts"
+            dir="{{settings.dir}}"
+          >
+            <ion-slide
+              style="
+                background: white;
+                width: 200px;
+                height: 100px;
+                border-radius: 19px;
+              "
+              class="slide-banner-cu"
+              *ngFor="let image of children.children"
+            >
               <img
+                style="border-radius: 19px; width: auto"
                 class="ion-activatable ion-focusable hydrated {{children.banner_shadow}}"
                 src="{{image.image}}"
                 [style.width.px]="screenWidth"
@@ -173,6 +237,96 @@
             </ion-slide>
           </ion-slides>
         </div>
+      </div>
+    </div>
+
+    <div
+      class="ng-bloc"
+      *ngFor="let children of data.blocks?.blocks | slice:0:1"
+    >
+      <ion-slides
+        [options]="{ slidesPerView: 'auto', zoom: false, grabCursor: true }"
+      >
+        <ion-slide
+          (click)="getCategory(item.id)"
+          *ngFor="let item of getSubCategories(children.link_id)"
+          style="
+            width: 150px;
+            height: 200px;
+            border: 2px solid #f8f8f8;
+            background: white;
+            border-radius: 22px;
+            margin-right: 9px;
+          "
+        >
+          <ion-col>
+            <img
+              class="card-cov-img"
+              *ngIf="item.image?.src"
+              src="{{item.image.src}}"
+            />
+            <img
+              class="card-cov-img"
+              *ngIf="!item.image?.src"
+              src="../../assets/logo-3.png"
+            />
+          </ion-col>
+
+          <div class="bottom-cov-cr-img">
+            <p class="txt-cover-txt">{{ item.name }}</p>
+          </div>
+        </ion-slide>
+      </ion-slides>
+    </div>
+
+    <div
+      *ngFor="let children of data.blocks?.blocks"
+      hideWhen="loading"
+      class="blocks"
+    >
+      <div
+        *ngIf="children.block_type == 'banner_block'"
+        [style.background-color]="children.bg_color"
+        [style.margin]="children.margin"
+        [style.padding]="children.padding"
+        class="banner_block"
+      >
+        <div
+          class="{{children.header_align}}"
+          [style.color]="children.title_color"
+        >
+          {{children.title}}
+        </div>
+        <!-- Banner Slider -->
+        <!-- <div
+          class="bg-color-slide-bn"
+          *ngIf="children.children?.length && children.style == 'slider'"
+        >
+          <p>ban test2</p>
+          <ion-slides
+            [options]="{ slidesPerView: 'auto', zoom: false, grabCursor: true }"
+            class="slides-banner"
+            pager="true"
+            [options]="slideOpts"
+            dir="{{settings.dir}}"
+          >
+            <ion-slide
+              style="width: 200px; height: 100px"
+              class="slide-banner-cu"
+              *ngFor="let image of children.children"
+            >
+              <img
+                class="ion-activatable ion-focusable hydrated {{children.banner_shadow}}"
+                src="{{image.image}}"
+                [style.width.px]="screenWidth"
+                [style.height.px]="getHeight(image)"
+                (click)="goto(image)"
+                [style.border-radius]="children.border_radius"
+                [style.padding]="children.margin_between"
+              />
+            </ion-slide>
+          </ion-slides>
+        </div> -->
 
         <!-- Banner Scroll -->
         <div
@@ -615,72 +769,81 @@
         {{children.title}}
       </div> -->
         <!-- Category Scroll -->
-        <!-- <div
-        *ngIf="data.categories && children.style == 'scroll'"
-        class="category-slider-scroll"
-      >
+
         <div
-          class="scrollmenu2"
-          [ngClass]="{'floating-header': children.header_align == 'left_floating'}"
+          *ngIf="data.categories && children.style == 'scroll'"
+          class="category-slider-scroll"
         >
-          <div class="scroll-related-products">
-            <div
-              class="product"
-              *ngFor="let item of getSubCategories(children.link_id)"
-              [style.width.%]="children.child_width"
-              [style.padding]="children.margin_between"
-            >
-              <ion-card
-                mode="md"
-                class="ion-activatable ion-focusable hydrated {{settings.settings.product_shadow}}"
-                [style.border-radius.px]="settings.dimensions.productBorderRadius"
-                (click)="getCategory(item.id)"
+          <h1>TEST SCROLL</h1>
+          <div
+            class="scrollmenu2"
+            [ngClass]="{'floating-header': children.header_align == 'left_floating'}"
+          >
+            <div class="scroll-related-products">
+              <div
+                class="product"
+                *ngFor="let item of getSubCategories(children.link_id)"
+                [style.width.%]="children.child_width"
+                [style.padding]="children.margin_between"
               >
-                <img *ngIf="item.image?.src" src="{{item.image.src}}" />
-                <ion-card-header>
-                  <ion-card-title text-center mode="md" [innerHTML]="item.name"
-                    >{{item.name}}</ion-card-title
-                  >
-                </ion-card-header>
-              </ion-card>
+                <ion-card
+                  mode="md"
+                  class="ion-activatable ion-focusable hydrated {{settings.settings.product_shadow}}"
+                  [style.border-radius.px]="settings.dimensions.productBorderRadius"
+                  (click)="getCategory(item.id)"
+                >
+                  <img *ngIf="item.image?.src" src="{{item.image.src}}" />
+                  <ion-card-header>
+                    <ion-card-title
+                      text-center
+                      mode="md"
+                      [innerHTML]="item.name"
+                      >{{item.name}}</ion-card-title
+                    >
+                  </ion-card-header>
+                </ion-card>
+              </div>
             </div>
           </div>
         </div>
-      </div> -->
 
         <!-- Category Grid -->
         <!-- <div
-        *ngIf="data.categories && children.style == 'grid'"
-        class="category-slider-grid"
-      >
-        <ion-row class="row unlimited-items">
-          <ion-col
-            class="col {{item.slug}}"
-            *ngFor="let item of getSubCategories(children.link_id)"
-            [style.width.%]="children.child_width"
-            [style.padding]="0"
-            [style.padding]="children.margin_between"
-          >
-            <div
-              class="ion-activatable ion-focusable hydrated"
-              (click)="getCategory(item.id)"
+          *ngIf="data.categories && children.style == 'grid'"
+          class="category-slider-grid"
+        >
+          <h1>TEST GRID</h1>
+          <ion-row class="row unlimited-items">
+            <ion-col
+              class="col {{item.slug}}"
+              *ngFor="let item of getSubCategories(children.link_id)"
+              [style.width.%]="children.child_width"
+              [style.padding]="0"
+              [style.padding]="children.margin_between"
             >
-              <ion-card
-                mode="md"
-                class="ion-activatable ion-focusable hydrated {{children.banner_shadow}}"
-                [style.border-radius]="children.border_radius"
+              <div
+                class="ion-activatable ion-focusable hydrated"
+                (click)="getCategory(item.id)"
               >
-                <img *ngIf="item.image?.src" src="{{item.image.src}}" />
-                <ion-card-header>
-                  <ion-card-title text-center mode="md" [innerHTML]="item.name"
-                    >{{item.name}}</ion-card-title
-                  >
-                </ion-card-header>
-              </ion-card>
-            </div>
-          </ion-col>
-        </ion-row>
-      </div> -->
+                <ion-card
+                  mode="md"
+                  class="ion-activatable ion-focusable hydrated {{children.banner_shadow}}"
+                  [style.border-radius]="children.border_radius"
+                >
+                  <img *ngIf="item.image?.src" src="{{item.image.src}}" />
+                  <ion-card-header>
+                    <ion-card-title
+                      text-center
+                      mode="md"
+                      [innerHTML]="item.name"
+                      >{{item.name}}</ion-card-title
+                    >
+                  </ion-card-header>
+                </ion-card>
+              </div>
+            </ion-col>
+          </ion-row>
+        </div> -->
       </div>
     </div>
 
@@ -703,11 +866,12 @@
         >
           <ion-card
             mode="md"
-            class="ion-activatable ion-focusable hydrated {{settings.settings.product_shadow}}"
+            class="custom-card-product"
             [style.border-radius.px]="settings.dimensions.productBorderRadius"
           >
             <ion-card-content>
               <ion-img
+                class="img-cus-pro"
                 alt=""
                 *ngIf="item.images?.length"
                 [src]="item.images[0].src"
@@ -715,6 +879,7 @@
                 [style.height.px]="settings.dimensions.homeSliderHeight"
               ></ion-img>
               <ion-img
+                class="img-cus-pro"
                 alt=""
                 [style.height.px]="settings.dimensions.homeSliderHeight"
                 *ngIf="!item.images?.length"
@@ -752,7 +917,9 @@
               </div> -->
             </ion-card-content>
             <ion-card-header (click)="getProduct(item)">
-              <ion-card-title mode="md">{{item.name}}</ion-card-title>
+              <ion-card-title mode="md">
+                <p class="pro-title-cus">{{item.name}}</p></ion-card-title
+              >
             </ion-card-header>
             <ion-card-content (click)="getProduct(item)">
               <p class="price">
@@ -870,23 +1037,25 @@
       >
         <ion-card
           mode="md"
-          class="ion-activatable ion-focusable hydrated {{settings.settings.product_shadow}}"
+          class="custom-card-product"
           [style.border-radius.px]="settings.dimensions.productBorderRadius"
         >
-          <ion-img
+          <img
+            class="img-cus-pro"
             alt=""
             [style.height.px]="settings.dimensions.homeGridViewHeight"
             *ngIf="item.images?.length"
             [src]="item.images[0].src"
             (click)="getProduct(item)"
-          ></ion-img>
-          <ion-img
+          />
+          <img
+            class="img-cus-pro"
             alt=""
             [style.height.px]="settings.dimensions.homeGridViewHeight"
             *ngIf="!item.images?.length"
             src="assets/image/logo.png"
             (click)="getProduct(item)"
-          ></ion-img>
+          />
           <ion-icon
             name="heart-outline"
             mode="md"

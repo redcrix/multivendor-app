@@ -307,50 +307,12 @@
 
       <!-- <div class="auctn" *ngIf="product_type_auction"> -->
 
-      <div class="ven_name_" *ngIf="product.type != 'auction'">
-        <!-- <p *ngIf="product.vendor.name" class="ttl">Sold by:</p> -->
-
-        <!-- <div *ngFor="let c of product.vendor_info"> -->
-        <p class="text_bid_vendor">{{product.vendor.name}}</p>
-        <!-- </div> -->
-        <p class="ttl">Av. rating:</p>
-        <rating
-          [(ngModel)]="product.average_rating"
-          readonly="true"
-          size="default"
-        >
-        </rating>
-        <!-- <ion-icon class="staricn" name="star-outline"></ion-icon>
-        <ion-icon
-          class="staricn-y"
-          *ngIf="product.average_rating >= '2'"
-          name="star-outline"
-        ></ion-icon>
-        <ion-icon
-          class="staricn-y"
-          *ngIf="product.average_rating >= '3'"
-          name="star-outline"
-        ></ion-icon>
-        <ion-icon
-          class="staricn-y"
-          *ngIf="product.average_rating >= '4'"
-          name="star-outline"
-        ></ion-icon>
-        <ion-icon
-          class="staricn-y"
-          *ngIf="product.average_rating >= '5'"
-          name="star-outline"
-        ></ion-icon> -->
-
-        <!-- <p class="rating_">{{product.average_rating}}</p> -->
-      </div>
-
       <div class="ven_name_" *ngIf="product.type == 'auction'">
         <!-- <p class="ttl">Sold by:</p> -->
         <!-- <div *ngFor="let c of product.vendor_info"> -->
         <!-- <p class="text_bid_vendor">{{product.vendor_info.name}}</p> -->
         <!-- </div> -->
-        <p class="ttl">Av. rating:</p>
+        <p class="ttl">Rating:</p>
         <ion-icon class="staricn" name="star-outline"></ion-icon>
         <ion-icon
           class="staricn-y"
@@ -373,16 +335,6 @@
           name="star-outline"
         ></ion-icon>
         <!-- <p class="rating_">{{product.average_rating}}</p> -->
-      </div>
-      <div class="ven_name_btn_">
-        <button class="contc-btn" (click)="contactSeller()">
-          <ion-icon
-            name="information-circle-outline"
-            class="info-ic"
-            style="color: white"
-          ></ion-icon>
-          <p class="txt-sell">Send Enquiry</p>
-        </button>
       </div>
 
       <p
@@ -428,27 +380,94 @@
         This product does not have a reserve price.
       </p>
       <!-- </div> -->
-      <ion-item
-        lines="none"
-        *ngIf="product.short_description"
-        class="description"
-      >
-        <ion-label
-          text-justify
-          text-wrap
-          [innerHTML]="product.short_description"
+
+      <div class="pro-desc-grid">
+        <ion-item
+          lines="none"
+          *ngIf="product.short_description"
+          class="description"
         >
-        </ion-label>
-      </ion-item>
-      <ion-item lines="none" *ngIf="product.description" class="description">
-        <ion-label text-justify text-wrap [innerHTML]="product.description">
-        </ion-label>
-      </ion-item>
+          <ion-label
+            text-justify
+            text-wrap
+            [innerHTML]="product.short_description"
+          >
+          </ion-label>
+        </ion-item>
+
+        <button class="more-btn" (click)="viewMre()">
+          See full description
+        </button>
+
+        <div class="see-fulldesc" *ngIf="product.description">
+          <ion-item lines="none" *ngIf="fullDescVis" class="description">
+            <ion-label text-justify text-wrap [innerHTML]="product.description">
+            </ion-label>
+          </ion-item>
+        </div>
+      </div>
+    </div>
+
+    <div class="ven_name_" *ngIf="product.type != 'auction'">
+      <!-- <p *ngIf="product.vendor.name" class="ttl">Sold by:</p> -->
+
+      <!-- <div *ngFor="let c of product.vendor_info"> -->
+
+      <p class="abt-seller">About Seller</p>
+      <div class="line-box">
+        <p class="text_bid_vendor">{{product.vendor.name}}</p>
+      </div>
+      <!-- </div> -->
+
+      <div class="line-box">
+        <p class="ttl">Ratings:</p>
+        <rating
+          [(ngModel)]="product.average_rating"
+          readonly="true"
+          size="default"
+        >
+        </rating>
+      </div>
+
+      <div class="line-box">
+        <div class="btn-qnr-lines">
+          <button class="enquiry-btn" (click)="contactSeller()">
+            <ion-icon
+              name="information-circle-outline"
+              class="info-ic"
+            ></ion-icon>
+            <p class="txt-sell">Send Enquiry</p>
+          </button>
+        </div>
+      </div>
+      <!-- <ion-icon class="staricn" name="star-outline"></ion-icon>
+      <ion-icon
+        class="staricn-y"
+        *ngIf="product.average_rating >= '2'"
+        name="star-outline"
+      ></ion-icon>
+      <ion-icon
+        class="staricn-y"
+        *ngIf="product.average_rating >= '3'"
+        name="star-outline"
+      ></ion-icon>
+      <ion-icon
+        class="staricn-y"
+        *ngIf="product.average_rating >= '4'"
+        name="star-outline"
+      ></ion-icon>
+      <ion-icon
+        class="staricn-y"
+        *ngIf="product.average_rating >= '5'"
+        name="star-outline"
+      ></ion-icon> -->
+
+      <!-- <p class="rating_">{{product.average_rating}}</p> -->
     </div>
 
     <div class="container_cus" *ngIf="product.type == 'auction'">
       <div class="Max_bids">
-        <p class="Bids"></p>
+        <p class="abt-seller" *ngIf="product.max_bid_amount">Bids</p>
       </div>
 
       <div class="details_">
@@ -456,7 +475,7 @@
         <p class="txt_">Date</p>
       </div>
 
-      <div class="details_cont" *ngIf="product.max_bid_amount ">
+      <div class="details_cont" *ngIf="product.max_bid_amount">
         <p class="text-details">{{product.max_bid_amount.bid}}</p>
         <p class="text-details">{{product.max_bid_amount.date}}</p>
       </div>

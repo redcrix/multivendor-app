@@ -11,6 +11,10 @@ import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { Platform } from "@ionic/angular";
 import { Config } from "../config";
 import { TranslateService } from "@ngx-translate/core";
+import {
+  InAppBrowser,
+  InAppBrowserOptions,
+} from "@ionic-native/in-app-browser/ngx";
 
 @Component({
   selector: "app-home",
@@ -18,6 +22,24 @@ import { TranslateService } from "@ngx-translate/core";
   styleUrls: ["home.page.scss"],
 })
 export class HomePage {
+  options: InAppBrowserOptions = {
+    location: "yes", //Or 'no'
+    hidden: "no", //Or  'yes'
+    clearcache: "yes",
+    clearsessioncache: "yes",
+    zoom: "yes", //Android only ,shows browser zoom controls
+    hardwareback: "yes",
+    mediaPlaybackRequiresUserAction: "no",
+    shouldPauseOnSuspend: "no", //Android only
+    closebuttoncaption: "Close", //iOS only
+    disallowoverscroll: "no", //iOS only
+    toolbar: "yes", //iOS only
+    enableViewportScale: "no", //iOS only
+    allowInlineMediaPlayback: "no", //iOS only
+    presentationstyle: "pagesheet", //iOS only
+    fullscreen: "yes", //Windows only
+  };
+
   tempProducts: any = [];
   filter: any = {};
   hasMoreItems: boolean = true;
@@ -32,8 +54,11 @@ export class HomePage {
     lazy: true,
   };
   allContent = true;
+  current_info: any;
+  allProInfo: any;
 
   constructor(
+    private theInAppBrowser: InAppBrowser,
     private config: Config,
     public api: ApiService,
     private splashScreen: SplashScreen,
@@ -112,7 +137,7 @@ export class HomePage {
       (res) => {
         this.all_vendors_auctions = [];
         this.all_vendors_auctions = res;
-        console.log(JSON.stringify(this.all_vendors_auctions));
+        // console.log(JSON.stringify(this.all_vendors_auctions));
 
         // this.data.updateCart(this.cart.cart_contents);
         // this.data.cartNonce = this.cart.cart_nonce;
@@ -197,6 +222,7 @@ export class HomePage {
         }
         if (this.data.blocks.settings.show_latest) {
           this.data.products = this.data.blocks.recentProducts;
+          this.allProInfo.push(this.data.products);
         }
         if (this.data.blocks.user) {
           this.api.postItem("get_wishlist").subscribe(
@@ -260,7 +286,14 @@ export class HomePage {
       (res) => {
         this.tempProducts = res;
         this.data.products.push.apply(this.data.products, this.tempProducts);
+        // if (this.data.products) {
+
+        this.allProInfo.push(this.data.products);
+
+        console.log(this.data.products);
+        // }
         event.target.complete();
+
         if (this.tempProducts.length == 0) this.hasMoreItems = false;
       },
       (err) => {
@@ -325,5 +358,37 @@ export class HomePage {
 
   close_deals_page() {
     this.allContent = true;
+  }
+
+  filterItems(event) {
+    const val = event.target.value;
+    this.current_info = [];
+    this.current_info = this.allProInfo;
+    console.log(JSON.stringify(this.allProInfo));
+
+    this.data.products = this.current_info.filter((item) => {
+      return item.name.toLowerCase().indexOf(val.toLowerCase()) > -1;
+    });
+  }
+
+  cart_page() {
+    this.navCtrl.navigateForward("/tabs/cart");
+  }
+
+  go_Menu(p) {
+    if (p == "1") {
+      this.go_DealsPage();
+    }
+    if (p == "2") {
+      this.openWithInAppBrowser("https://opyix.com/become-a-vendor/");
+    }
+    if (p == "3") {
+      this.navCtrl.navigateForward("/tabs/all-sellers");
+    }
+  }
+
+  public openWithInAppBrowser(url: string) {
+    let target = "_blank";
+    this.theInAppBrowser.create(url, target, this.options);
   }
 }

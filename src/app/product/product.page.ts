@@ -71,6 +71,7 @@ export class ProductPage {
   add_comment: any;
   starRating = 5;
   NewUser = true;
+  fullDescVis = false;
   constructor(
     private theInAppBrowser: InAppBrowser,
     public translate: TranslateService,
@@ -99,6 +100,9 @@ export class ProductPage {
     this.navCtrl.navigateForward(
       this.router.url + "/review/" + this.product.id
     );
+  }
+  ionViewDidEnter() {
+    this.fullDescVis = false;
   }
   getProduct() {
     //     a) Time left
@@ -895,6 +899,8 @@ export class ProductPage {
   /* PRODUCT ADDONS */
 
   contactSeller() {
+    console.log(JSON.stringify(this.product));
+
     if (this.settings.customer.id == undefined) {
       this.presentToast("Login to send an enquiry");
       return;
@@ -945,5 +951,11 @@ export class ProductPage {
     this.navCtrl.navigateForward(
       "/tabs/home/product/" + this.product.id + "review/"
     );
+  }
+
+  viewMre() {
+    console.log("viewmr");
+
+    this.fullDescVis = true;
   }
 }
