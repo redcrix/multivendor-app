@@ -26,10 +26,11 @@
     ></ion-input>
   </ion-item>
 
-  <ion-item>
+  <ion-item *ngIf="!AuctionProductEnable">
     <ion-label>{{"Type" | translate}}</ion-label>
     <ion-select
       [(ngModel)]="vendor.product.type"
+      value="simple"
       name="type"
       okText="OK"
       cancelText="Cancel"
@@ -43,8 +44,28 @@
     </ion-select>
   </ion-item>
 
+  <ion-item *ngIf="AuctionProductEnable">
+    <ion-label>{{"Type" | translate}}</ion-label>
+    <ion-select
+      [(ngModel)]="vendor.product.type"
+      value="auction"
+      name="type"
+      okText="OK"
+      cancelText="Cancel"
+    >
+      <ion-select-option value="simple"
+        >{{"Auction" | translate}}</ion-select-option
+      >
+    </ion-select>
+  </ion-item>
+
   <ion-item>
-    <ion-label position="floating">{{"Regular Price" | translate}}</ion-label>
+    <ion-label *ngIf="!AuctionProductEnable" position="floating"
+      >{{"Regular Price" | translate}}</ion-label
+    >
+    <ion-label *ngIf="AuctionProductEnable" position="floating"
+      >{{"Bid Price" | translate}}</ion-label
+    >
     <ion-input
       required
       type="text"
@@ -53,13 +74,56 @@
     ></ion-input>
   </ion-item>
 
-  <ion-item>
+  <ion-item *ngIf="!AuctionProductEnable">
     <ion-label position="floating">{{"Sale Price" | translate}}</ion-label>
+
     <ion-input
       required
       type="text"
       [(ngModel)]="vendor.product.sale_price"
       name="sale_price"
+    ></ion-input>
+  </ion-item>
+
+  <ion-item *ngIf="AuctionProductEnable">
+    <ion-label position="floating">{{"Reserve Price" | translate}}</ion-label>
+
+    <ion-input
+      required
+      type="text"
+      [(ngModel)]="vendor.product._yith_auction_reserve_price"
+      name="_yith_auction_reserve_price"
+    ></ion-input>
+  </ion-item>
+
+  <ion-item *ngIf="AuctionProductEnable">
+    <ion-label position="floating">{{"Starting Price" | translate}}</ion-label>
+
+    <ion-input
+      required
+      type="text"
+      [(ngModel)]="vendor.product._yith_auction_start_price"
+      name="_yith_auction_start_price"
+    ></ion-input>
+  </ion-item>
+  <ion-item *ngIf="AuctionProductEnable">
+    <ion-label position="floating">{{"Bid up" | translate}}</ion-label>
+
+    <ion-input
+      required
+      type="text"
+      [(ngModel)]="vendor.product._yith_auction_bid_increment"
+      name="_yith_auction_bid_increment"
+    ></ion-input>
+  </ion-item>
+  <ion-item *ngIf="AuctionProductEnable">
+    <ion-label position="floating">{{"Min inc amt" | translate}}</ion-label>
+
+    <ion-input
+      required
+      type="text"
+      [(ngModel)]="vendor.product._yith_auction_minimum_increment_amount"
+      name="_yith_auction_minimum_increment_amount"
     ></ion-input>
   </ion-item>
 
@@ -108,12 +172,23 @@
     ></ion-datetime>
   </ion-item>
 
-  <ion-item class="date">
+  <ion-item class="date" *ngIf="!AuctionProductEnable">
     <ion-label position="floating">{{"Date On Sale To" | translate}}</ion-label>
     <ion-datetime
       displayFormat="YYYY-MM-DD"
       [(ngModel)]="vendor.product.date_on_sale_to"
       name="date_on_sale_to"
+    ></ion-datetime>
+  </ion-item>
+
+  <ion-item class="date" *ngIf="AuctionProductEnable">
+    <ion-label position="floating"
+      >{{"Auction End Date" | translate}}</ion-label
+    >
+    <ion-datetime
+      displayFormat="YYYY-MM-DD"
+      [(ngModel)]="vendor.product.auction_end_date"
+      name="auction_end_date"
     ></ion-datetime>
   </ion-item>
 

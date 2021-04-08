@@ -1,0 +1,156 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button *ngIf="!singleView" icon="arrow-back"></ion-back-button>
+
+      <ion-icon
+        *ngIf="singleView"
+        (click)="bckNow()"
+        class="icn-cu"
+        name="arrow-back-outline"
+      ></ion-icon>
+    </ion-buttons>
+    <ion-title>General Enquiries</ion-title>
+
+    <ion-buttons slot="end" (click)="close_()">
+      <ion-icon class="cart_icn" name="close-outline"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="contact" *ngIf="singleView">
+    <ion-row>
+      <ion-col> </ion-col>
+    </ion-row>
+    <div class="card" *ngFor="let t of singleViewData">
+      <div class="labels">
+        <p class="info_title">Enquiry Id:</p>
+        <p class="info_data">{{t.inquery_id}}</p>
+      </div>
+
+      <div class="labels">
+        <p class="info_title">Message:</p>
+        <p class="info_data">{{t.enquiry}}</p>
+      </div>
+
+      <div class="labels">
+        <p class="info_title">Product Name:</p>
+        <p class="info_data">{{t.product_title}}</p>
+      </div>
+
+      <div class="labels">
+        <p class="info_title">Product Image:</p>
+
+        <img src="{{t.thumbnail}}" class="p-img" />
+      </div>
+
+      <div class="labels">
+        <p class="info_title">Enquired on:</p>
+        <p class="info_data">{{t.posted}}</p>
+      </div>
+
+      <div class="labels">
+        <p class="info_title">Replies:</p>
+
+        <div class="rep-arr" *ngFor="let r of t.replies">
+          <span class="bold-s" style="font-weight: bold; margin-right: 5px">
+            {{r.customer_name}}
+          </span>
+          <p class="info_data Msg">{{r.reply}}</p>
+        </div>
+      </div>
+
+      <!-- <div class="labels">
+        <p class="info_title">Replies:</p>
+        <p class="info_data">{{t.replies}}</p>
+      </div> -->
+
+      <!-- <img src="t.thumbnail" class="thumbn" /> -->
+    </div>
+  </div>
+
+  <div class="contact" *ngIf="!singleView">
+    <div class="contact-cont">
+      <p class="cnt">
+        {{message}}
+        <!-- No tickets found for the ordered products. -->
+      </p>
+
+      <div class="tickets">
+        <div class="card" *ngFor="let t of tickets_data">
+          <div class="labels">
+            <p class="info_title">Enquiry Id:</p>
+            <p class="info_data">{{t.inquery_id}}</p>
+          </div>
+
+          <div class="labels">
+            <p class="info_title">Message:</p>
+            <p class="info_data">{{t.enquiry}}</p>
+          </div>
+
+          <div class="labels">
+            <p class="info_title">Product Name:</p>
+            <p class="info_data">{{t.product_title}}</p>
+          </div>
+
+          <div class="labels">
+            <p class="info_title">Product Image:</p>
+
+            <img src="{{t.thumbnail}}" class="p-img" />
+          </div>
+
+          <div class="labels">
+            <p class="info_title">Enquired on:</p>
+            <p class="info_data">{{t.posted}}</p>
+          </div>
+
+          <div class="labels">
+            <p class="info_title">Replies:</p>
+            <div class="rep-arr" *ngFor="let r of t.replies">
+              <p class="info_data Msg">
+                <span
+                  class="bold-s"
+                  style="font-weight: bold; margin-right: 5px"
+                >
+                  {{r.customer_name}}
+                </span>
+                {{r.reply}}
+              </p>
+            </div>
+          </div>
+
+          <ion-row>
+            <ion-col style="text-align: center">
+              <ion-button class="button-cl" (click)="ViewDetails(t)">
+                Details
+              </ion-button>
+            </ion-col>
+          </ion-row>
+
+          <!-- <img src="t.thumbnail" class="thumbn" /> -->
+        </div>
+      </div>
+    </div>
+    <div class="conte">
+      <p class="conte-txt">Contact Directly</p>
+
+      <p class="mailUs">
+        <ion-icon name="mail-outline" class="mail-cn"></ion-icon>
+        info@opyix.com
+      </p>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer *ngIf="singleView">
+  <ion-row>
+    <ion-col size="9">
+      <ion-input [(ngModel)]="enquiry" placeholder="Reply"></ion-input>
+    </ion-col>
+
+    <ion-col size="3">
+      <button (click)="sendNewReply()" class="cus-send-btn">Send</button>
+    </ion-col>
+  </ion-row></ion-footer
+>

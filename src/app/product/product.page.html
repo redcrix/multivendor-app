@@ -257,7 +257,6 @@
           *ngIf="product.type != 'external' && product.type != 'auction' "
           class="add-to-cart-button"
           expand="block"
-          [disabled]="disableButton || product.stock_status == 'outofstock'"
           (click)="addToCart()"
           >{{"ADD TO CART" | translate}}</ion-button
         >
@@ -278,7 +277,6 @@
         color="{{settings.theme.button}}"
         expand="block"
         fill="solid"
-        [disabled]="disableButton || product.stock_status == 'outofstock'"
         (click)="checkout(product.id)"
         >{{"CHECKOUT" | translate}}</ion-button
       >

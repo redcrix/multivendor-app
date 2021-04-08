@@ -12,16 +12,8 @@ p.cnt {
 }
 .contact {
   background: #d3d3d33b;
-  height: 100%;
 }
 
-ion-content.ios.overscroll.hydrated {
-  --background: #d7d8da;
-}
-
-ion-content.md.overscroll.hydrated {
-  --background: #d7d8da;
-}
 .contact-cont {
   padding-top: 2px;
   margin-left: 20px;
@@ -33,6 +25,7 @@ ion-content.md.overscroll.hydrated {
   padding-top: 2px;
   background: white;
   padding-bottom: 10px;
+  margin-bottom: 34px;
 }
 
 img.con-im {
@@ -44,18 +37,46 @@ img.con-im {
   font-size: 13px;
 }
 
-.info_data {
-  margin-top: -13px;
-}
-
 .conte {
-  width: 201px;
   border-radius: 10px;
   padding-left: 18px;
   padding-top: 2px;
   height: 99px;
+  -webkit-box-shadow: 5px 2px 36px 5px #d7d8da;
+  -moz-box-shadow: 5px 2px 36px 5px #d7d8da;
+  margin-bottom: 40px;
+  width: 81%;
 }
 
 p.conte-txt {
   font-weight: bold;
+}
+
+ion-icon.icn-cu.ios.hydrated {
+  background: gray;
+  border-radius: 60px;
+  padding: 7px;
+  color: white;
+  font-size: 20px;
+}
+
+ion-icon.icn-cu.md.hydrated {
+  background: gray;
+  border-radius: 60px;
+  padding: 7px;
+  color: white;
+  font-size: 20px;
+}
+
+button.cus-send-btn {
+  float: right;
+  margin-top: 8px;
+  background: black;
+  color: white;
+  border-radius: 60px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  font-size: 15px;
 }

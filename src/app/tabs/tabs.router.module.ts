@@ -53,6 +53,7 @@ import { AllSellersPage } from "../all-sellers/all-sellers.page";
 import { TermsConditionPage } from "../terms-condition/terms-condition.page";
 import { HelpPage } from "../help/help.page";
 import { TicketsPage } from "../tickets/tickets.page";
+import { Myenquiries } from "../my-enquiries/my-enquiries.page";
 import { PrivacyPolicyPage } from "../privacy-policy/privacy-policy.page";
 const routes: Routes = [
   {
@@ -74,6 +75,16 @@ const routes: Routes = [
           {
             path: "",
             component: TicketsPage,
+          },
+        ],
+      },
+
+      {
+        path: "my-enquiries",
+        children: [
+          {
+            path: "",
+            component: Myenquiries,
           },
         ],
       },

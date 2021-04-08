@@ -138,4 +138,8 @@ export class AccountPage {
     let target = "_blank";
     this.theInAppBrowser.create(url, target, this.options);
   }
+
+  chVendr() {
+    console.log(JSON.stringify(this.settings.vendor));
+  }
 }

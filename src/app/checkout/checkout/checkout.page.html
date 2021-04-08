@@ -92,7 +92,7 @@
         <!-- All other payment gateways   -->
         <ion-item *ngFor="let method of orderReview.payment | keys">
           <ion-label text-wrap class="ion-text-nowrap"
-            ><span [innerHTML]="method.value.title | slice: 0:11"></span
+            ><span [innerHTML]="method.value.title"></span
           ></ion-label>
           <ion-radio
             color="{{settings.theme.button}}"
@@ -169,7 +169,7 @@
           </ion-item>
           <ion-item>
             <ion-label position="stacked"
-              >{{" checkoutData Expiry Year " |translate}} (YY)
+              >{{" Expiry Year " |translate}} (YY)
             </ion-label>
             <ion-input
               required
@@ -279,7 +279,7 @@
     >
       <ion-label text-wrap>
         <span
-          [innerHTML]="orderReview.payment[checkoutData.form.payment_method]?.description | slice: 0:25"
+          [innerHTML]="orderReview.payment[checkoutData.form.payment_method]?.description "
         ></span>
       </ion-label>
     </ion-item>

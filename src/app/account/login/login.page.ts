@@ -49,6 +49,8 @@ export class LoginPage implements OnInit {
     await this.api.postItem("login", this.form.value).subscribe(
       (res) => {
         this.status = res;
+        console.log("HEREWIYH-----------" + JSON.stringify(this.status));
+
         if (this.status.errors) {
           this.errors = this.status.errors;
           for (var key in this.errors) {

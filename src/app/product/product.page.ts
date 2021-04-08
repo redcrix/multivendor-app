@@ -178,7 +178,10 @@ export class ProductPage {
       });
     this.product = this.productData.product;
 
-    if (this.product["auction_end_date"] != undefined) {
+    if (
+      this.product["auction_end_date"] != undefined &&
+      this.product["auction_end_date"] != false
+    ) {
       console.log("====" + this.product["auction_end_date"]);
 
       // var sliced = this.product["auction_end_date"].slice(0, 10);

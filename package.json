@@ -54,7 +54,7 @@
     "cordova-plugin-facebook4": "^6.4.0",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-file-transfer": "^1.7.1",
-    "cordova-plugin-googleplus": "^8.5.1",
+    "cordova-plugin-googleplus": "^8.5.2",
     "cordova-plugin-inappbrowser": "^3.2.0",
     "cordova-plugin-ionic-webview": "5.0.0",
     "cordova-plugin-nativestorage": "^2.3.2",
@@ -130,12 +130,12 @@
         "APP_ID": "299120978099633",
         "APP_NAME": "Opyix"
       },
-      "cordova-plugin-googleplus": {
-        "REVERSED_CLIENT_ID": "com.opyix.app",
-        "WEB_APPLICATION_CLIENT_ID": "984104447203-t47u8d4o7l16ceck46djnd7gf634quaf.apps.googleusercontent.com"
-      },
       "cordova-custom-config": {},
-      "cordova-plugin-ionic-webview": {}
+      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-googleplus": {
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.762441456526-0ddthv436krh84nmjicdvng2kvpkrvoc",
+        "WEB_APPLICATION_CLIENT_ID": "762441456526-0ddthv436krh84nmjicdvng2kvpkrvoc.apps.googleusercontent.com"
+      }
     },
     "platforms": [
       "browser",
