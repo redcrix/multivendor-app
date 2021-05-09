@@ -55,7 +55,7 @@ export class HomePage {
   };
   allContent = true;
   current_info: any;
-  allProInfo: any;
+  allProInfo: any = [];
 
   constructor(
     private theInAppBrowser: InAppBrowser,
@@ -282,13 +282,17 @@ export class HomePage {
   }
   loadData(event) {
     this.filter.page = this.filter.page + 1;
+
+    console.log(this.filter);
+    // console.log(this.filter);
     this.api.postFlutterItem("products", this.filter).subscribe(
       (res) => {
         this.tempProducts = res;
         this.data.products.push.apply(this.data.products, this.tempProducts);
         // if (this.data.products) {
+        this.allProInfo.push.apply(this.allProInfo, this.data.products);
 
-        this.allProInfo.push(this.data.products);
+        // this.allProInfo.push(this.data.products);
 
         console.log(this.data.products);
         // }

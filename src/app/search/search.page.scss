@@ -123,6 +123,25 @@ button.non-ac-btns {
   padding-bottom: 10px;
 }
 
+.sc-ion-buttons-md-s .button-has-icon-only.button-clear {
+  margin-right: -18px !important;
+}
+
+.sc-ion-buttons-ios-s .button-has-icon-only.button-clear {
+  margin-right: -18px !important;
+}
+ion-button.md.button.button-small.button-clear.button-has-icon-only.button-disabled.ion-activatable.ion-focusable.hydrated {
+  /* padding-right: 9px; */
+  margin-right: -18px !important;
+}
+ion-button.md.button.button-small.button-clear.button-has-icon-only.button-disabled.ion-activatable.ion-focusable.hydrated {
+  margin-right: -18px !important;
+}
+ion-button.ios.button.button-small.button-clear.button-has-icon-only.button-disabled.ion-activatable.ion-focusable.hydrated {
+  /* padding-right: 9px; */
+  margin-right: -18px !important;
+}
+
 ion-button.md.button.button-small.button-clear.button-has-icon-only.button-disabled.ion-activatable.ion-focusable.hydrated {
   margin-left: -19px;
 }

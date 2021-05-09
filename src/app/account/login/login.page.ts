@@ -142,6 +142,7 @@ export class LoginPage implements OnInit {
         this.googleLogingInn = false;
       })
       .catch((err) => {
+        console.log(err);
         this.googleStatus = err;
         this.googleLogingInn = false;
       });

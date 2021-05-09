@@ -122,6 +122,7 @@ export class Myenquiries implements OnInit {
 
   bckNow() {
     this.singleView = false;
+    this.getData_();
   }
 
   async sendNewReply() {
