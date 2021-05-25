@@ -282,11 +282,30 @@
       >
 
       <p class="ttl Auc" *ngIf="product.type == 'auction'">Auction ends on:</p>
-      <countdown-timer
+      <!-- <countdown-timer
+
+        [end]="date"
+      ></countdown-timer> -->
+
+      <lib-angular-countdown-dateTime
         class="timer_p"
         *ngIf="product.type == 'auction'"
-        [end]="date"
-      ></countdown-timer>
+        [endDateBind]="date"
+        [dayText]="'day'"
+        [hourText]="'hour'"
+        [minutesText]="'minute'"
+        [secondsText]="'second'"
+      >
+      </lib-angular-countdown-dateTime>
+
+      <!-- <countdown #cd [config]="config" (event)="handleEvent($event)"></countdown> -->
+
+      <!-- <count-down
+        units="Days | Hours | Minutes | Seconds"
+        class="timer_p"
+        *ngIf="product.type == 'auction'"
+        end="date"
+      ></count-down> -->
 
       <!-- <p class="end_date_interval" *ngIf="product.type == 'auction'">
         {{product.interval_minutes | date:'medium' }} Mins

@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+import { NgModule, ModuleWithProviders } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouteReuseStrategy } from "@angular/router";
 
@@ -47,11 +47,22 @@ import {
 //pages
 import { FilterPage } from "../app/filter/filter.page";
 import { OrderSummaryPage } from "./checkout/order-summary/order-summary.page";
-import { CountdownTimerModule } from "angular-countdown-timer";
+// import { CountdownTimerModule } from "angular-countdown-timer";
+import { CountdownModule } from "ngx-countdown";
+
+// import { CountdownTimerModule } from "ngx-countdown-time";
+// import { BsDropdownModule } from "./cus.module";
 
 import { IonicRatingModule } from "ionic4-rating";
+// import { CountdownTimerModule } from "ngx-countdown-timer";
 
 // import { CountdownModule } from "ng2-date-countdown";
+
+// import { CountdownModule } from "ng2-date-countdown";
+// import { CountdownTimerModule } from 'ngx-countdown-timer';
+
+// import { CountdownModule } from 'ngx-countdown';
+// import { CountDown } from "../../node_modules/angular2-simple-countdown/countdown";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -63,6 +74,8 @@ export function createTranslateLoader(http: HttpClient) {
     FilterPage,
     OrderSummaryPage,
     //HomePage
+    // CountdownTimerModule,
+    // CountDown,
   ],
   entryComponents: [
     FilterPage,
@@ -73,10 +86,13 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserModule,
     IonicRatingModule,
     FormsModule,
+    CountdownModule,
     HttpClientModule,
     KeysPipeModule,
     IonicModule.forRoot(),
     AppRoutingModule,
+    // CountdownModule,
+    // BsDropdownModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -87,7 +103,6 @@ export function createTranslateLoader(http: HttpClient) {
   ],
 
   providers: [
-    CountdownTimerModule,
     StatusBar,
     SplashScreen,
     HomePage,
@@ -109,6 +124,7 @@ export function createTranslateLoader(http: HttpClient) {
     SocialSharing,
     HTTP,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    // CountdownTimerModule,
   ],
   bootstrap: [AppComponent],
 })

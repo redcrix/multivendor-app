@@ -1,45 +1,46 @@
 {
   "project_info": {
-    "project_number": "762441456526",
-    "project_id": "opyix---shubam",
-    "storage_bucket": "opyix---shubam.appspot.com"
+    "project_number": "1047244263290",
+    "firebase_url": "https://opyix-2af09.firebaseio.com",
+    "project_id": "opyix-2af09",
+    "storage_bucket": "opyix-2af09.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:762441456526:android:4877fac9fe10d80bcda2df",
+        "mobilesdk_app_id": "1:1047244263290:android:a3375668c47763e6a150c3",
         "android_client_info": {
           "package_name": "com.opyix.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "762441456526-npr56ova67hc1nuflhl0731cfoimorji.apps.googleusercontent.com",
+          "client_id": "1047244263290-t22mik39t8mq3bpt2p5bths8un41rgek.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.opyix.app",
-            "certificate_hash": "0562bde5e4ed61d4bb3060ab97eb0739616f8d44"
+            "certificate_hash": "4e58379374f68add3068c4d07ac3f72652520224"
           }
         },
         {
-          "client_id": "762441456526-csrjt1epdc55hlm5be27a5llvadvad1u.apps.googleusercontent.com",
+          "client_id": "1047244263290-2d8a3bhel9oktlarfm6qck295vt8cfb0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAxxE6zdlBaRwNQ9UkFyp06A-J5m7fpsiI"
+          "current_key": "AIzaSyAGi7holdj3mQQxfbpMlffALd5IuHKwQ7s"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "762441456526-csrjt1epdc55hlm5be27a5llvadvad1u.apps.googleusercontent.com",
+              "client_id": "1047244263290-2d8a3bhel9oktlarfm6qck295vt8cfb0.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "762441456526-0ddthv436krh84nmjicdvng2kvpkrvoc.apps.googleusercontent.com",
+              "client_id": "1047244263290-3cvjn1tc7uv0p1lrnju9kskm1b1q5rqk.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.opyix.app"

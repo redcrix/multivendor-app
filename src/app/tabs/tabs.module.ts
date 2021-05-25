@@ -1,6 +1,6 @@
 import { IonicModule } from "@ionic/angular";
 import { RouterModule } from "@angular/router";
-import { NgModule } from "@angular/core";
+import { NgModule, ModuleWithProviders } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
 import { TabsPageRoutingModule } from "./tabs.router.module";
@@ -65,14 +65,15 @@ import { TicketsPage } from "../tickets/tickets.page";
 
 import { Myenquiries } from "../my-enquiries/my-enquiries.page";
 import { PrivacyPolicyPage } from "../privacy-policy/privacy-policy.page";
-import { CountdownTimerModule } from "angular-countdown-timer";
-
+// import { CountdownTimerModule } from "angular-countdown-timer";
+// import { CountDown } from "../../../node_modules/angular2-simple-countdown/countdown";
 import { IonicRatingModule } from "ionic4-rating";
+
+import { AngularCountdownDateTimeModule } from "angular-countdown-date-time";
 
 @NgModule({
   imports: [
     IonicRatingModule,
-    CountdownTimerModule,
     IonicModule,
     CommonModule,
     FormsModule,
@@ -81,6 +82,7 @@ import { IonicRatingModule } from "ionic4-rating";
     KeysPipeModule,
     FormsModule,
     ReactiveFormsModule,
+    AngularCountdownDateTimeModule,
   ],
   declarations: [
     TabsPage,
@@ -135,5 +137,18 @@ import { IonicRatingModule } from "ionic4-rating";
     //TEST SITE
     TestSitePage,
   ],
+
+  providers: [],
 })
 export class TabsPageModule {}
+
+// export class BsDropdownModule {
+//   // constructor(parentModule: BsDropdownModule);
+//   //  static forRoot(config?: any): ModuleWithProviders;
+//   static forRoot(config?: any): ModuleWithProviders {
+//     return {
+//       ngModule: BsDropdownModule,
+//       providers: [CountdownTimerModule],
+//     };
+//   }
+// }

@@ -114,33 +114,44 @@ export class ProductPage {
       (res) => {
         this.product = res;
         console.log("====" + this.product["auction_end_date"]);
-        const date = moment(this.product["auction_end_date"]).format(
-          "YYYY-MM-DD"
+        console.log(
+          "=222222===" + this.product["custom_fields"]["_yith_auction_to"][0]
         );
-        console.log(JSON.stringify(date));
+        // const date = moment(this.product["auction_end_date"]).format(
+        //   "YYYY-MM-DD"
+        // );
+        // console.log(JSON.stringify(date));
         // var sliced = this.product["auction_end_date"].slice(0, 10);
         // console.log("Sliced+" + sliced);
         // 12 - 22 - 2222;
 
-        if (this.product["auction_end_date"] != undefined) {
-          let dd =
-            this.product["auction_end_date"].slice(6, 10) +
-            "-" +
-            this.product["auction_end_date"].slice(3, 5) +
-            "-" +
-            this.product["auction_end_date"].slice(0, 2) +
-            "T" +
-            this.product["auction_end_date"].slice(11, 19);
+        if (this.product["custom_fields"]["_yith_auction_to"][0] != undefined) {
+          let dd = this.product["custom_fields"]["_yith_auction_to"][0].slice(
+            0,
+            19
+          );
 
+          // let dd =
+          //   this.product["custom_fields"]["_yith_auction_to"][0].slice(6, 10) +
+          //   "-" +
+          //   this.product["custom_fields"]["_yith_auction_to"][0].slice(3, 5) +
+          //   "-" +
+          //   this.product["custom_fields"]["_yith_auction_to"][0].slice(0, 2) +
+          //   "T" +
+          //   this.product["custom_fields"]["_yith_auction_to"][0].slice(11, 19);
+
+          // let dd = this.product["custom_fields"]["_yith_auction_to"][0];
           this.date = new Date(dd);
           console.log(dd);
 
           this.date = new Date(dd);
+
+          console.log(JSON.stringify(this.product));
         }
 
         let P_type = this.product.type;
 
-        console.log(JSON.stringify(this.product["auction_end_date"]));
+        // console.log(JSON.stringify(this.product["auction_end_date"]));
 
         if (P_type == "auction") {
           this.product_type_auction = true;
@@ -184,20 +195,29 @@ export class ProductPage {
     ) {
       console.log("====" + this.product["auction_end_date"]);
 
+      console.log(
+        "=222222===" + this.product["custom_fields"]["_yith_auction_to"][0]
+      );
+
       // var sliced = this.product["auction_end_date"].slice(0, 10);
       // console.log("Sliced+" + sliced);
       // 12 - 22 - 2222;
-      let dd =
-        this.product["auction_end_date"].slice(6, 10) +
-        "-" +
-        this.product["auction_end_date"].slice(3, 5) +
-        "-" +
-        this.product["auction_end_date"].slice(0, 2) +
-        "T" +
-        this.product["auction_end_date"].slice(11, 19);
+      let dd = this.product["custom_fields"]["_yith_auction_to"][0].slice(
+        0,
+        19
+      );
 
-      this.date = new Date(dd);
+      // let dd = this.product["custom_fields"]["_yith_auction_to"][0];
+
+      // this.date = new Date(dd);
+
+      console.log("BEF" + this.product["custom_fields"]);
+
       console.log(dd);
+
+      // let an = "2021-05-29T12:01:00";
+
+      console.log(JSON.stringify(this.product));
 
       this.date = new Date(dd);
     }
@@ -530,7 +550,9 @@ export class ProductPage {
     this.productData.product = {};
   }
 
-  checkout() {
+  checkout(n) {
+    console.log(n);
+
     this.addToCart();
     if (this.settings.customer.id) {
       this.navCtrl.navigateForward("/tabs/cart/address");
