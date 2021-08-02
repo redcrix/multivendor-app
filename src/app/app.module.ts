@@ -1,7 +1,7 @@
 import { NgModule, ModuleWithProviders } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouteReuseStrategy } from "@angular/router";
-
+import { IonicStorageModule } from "@ionic/storage-angular";
 import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
@@ -34,7 +34,12 @@ import { HTTP } from "@ionic-native/http/ngx";
 //Uncomment when you use Google Login
 import { GooglePlus } from "@ionic-native/google-plus/ngx";
 import { Facebook } from "@ionic-native/facebook/ngx";
-
+import {
+  SignInWithApple,
+  AppleSignInResponse,
+  AppleSignInErrorResponse,
+  ASAuthorizationAppleIDRequest,
+} from "@ionic-native/sign-in-with-apple/ngx";
 //vendor
 import { ImagePicker } from "@ionic-native/image-picker/ngx";
 import { Crop } from "@ionic-native/crop/ngx";
@@ -90,6 +95,7 @@ export function createTranslateLoader(http: HttpClient) {
     HttpClientModule,
     KeysPipeModule,
     IonicModule.forRoot(),
+    IonicStorageModule.forRoot(),
     AppRoutingModule,
     // CountdownModule,
     // BsDropdownModule.forRoot(),
@@ -122,6 +128,7 @@ export function createTranslateLoader(http: HttpClient) {
     Crop,
     FileTransfer,
     SocialSharing,
+    SignInWithApple,
     HTTP,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     // CountdownTimerModule,

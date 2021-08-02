@@ -22,13 +22,28 @@
           <ion-row>
             <ion-col size="12">
               <ion-button
+                style="--background: black"
+                expand="block"
+                shape="undefined"
+                mode="ios"
+                fill="solid"
+                class="apple-bt"
+                (click)="appleLogin()"
+              >
+                <ion-icon slot="start" name="logo-apple"></ion-icon>{{"Apple"|
+                translate}}</ion-button
+              >
+              <br />
+            </ion-col>
+
+            <ion-col size="12">
+              <ion-button
                 expand="block"
                 shape="undefined"
                 mode="ios"
                 fill="solid"
                 color="google"
                 (click)="googleLogin()"
-                [disabled]="googleLogingInn"
               >
                 <ion-icon slot="start" name="logo-google"></ion-icon>{{"Google"|
                 translate}}</ion-button

@@ -20,6 +20,9 @@ import { InAppBrowser } from "@ionic-native/in-app-browser/ngx";
 import * as moment from "moment";
 import { formatDate } from "@angular/common";
 import { InAppBrowserOptions } from "@ionic-native/in-app-browser/ngx";
+import { Platform } from "@ionic/angular";
+// import { Storage } from "@ionic/storage-angular";
+
 @Component({
   selector: "app-product",
   templateUrl: "product.page.html",
@@ -44,7 +47,7 @@ export class ProductPage {
     presentationstyle: "pagesheet", //iOS only
     fullscreen: "yes", //Windows only
   };
-
+  AuctionEnded = false;
   loginForm: any = {};
   product: any;
   filter: any = {};
@@ -88,7 +91,8 @@ export class ProductPage {
     public alertController: AlertController,
     public route: ActivatedRoute,
     public vendor: Vendor,
-    public iab: InAppBrowser
+    public iab: InAppBrowser,
+    public platform: Platform
   ) {
     // if (this.settings.customer.id == undefined) {
     //   this.NewUser = true;
@@ -113,10 +117,8 @@ export class ProductPage {
     this.api.postFlutterItem("product", { product_id: this.id }).subscribe(
       (res) => {
         this.product = res;
-        console.log("====" + this.product["auction_end_date"]);
-        console.log(
-          "=222222===" + this.product["custom_fields"]["_yith_auction_to"][0]
-        );
+        console.log("====" + this.product["custom_fields"]["_yith_auction_to"]);
+
         // const date = moment(this.product["auction_end_date"]).format(
         //   "YYYY-MM-DD"
         // );
@@ -130,6 +132,20 @@ export class ProductPage {
             0,
             19
           );
+
+          console.log(
+            "=222222===" + this.product["custom_fields"]["_yith_auction_to"][0]
+          );
+
+          let dMatch1 = this.product["custom_fields"][
+            "_yith_auction_to"
+          ][0].slice(0, 19);
+
+          let dMatch2 = Date.now;
+
+          console.log("DATE 1 ====" + dMatch1);
+
+          console.log("DATE 1 ====" + dMatch2);
 
           // let dd =
           //   this.product["custom_fields"]["_yith_auction_to"][0].slice(6, 10) +
@@ -202,24 +218,65 @@ export class ProductPage {
       // var sliced = this.product["auction_end_date"].slice(0, 10);
       // console.log("Sliced+" + sliced);
       // 12 - 22 - 2222;
-      let dd = this.product["custom_fields"]["_yith_auction_to"][0].slice(
-        0,
-        19
-      );
+      let dateOfAuction = this.product["custom_fields"][
+        "_yith_auction_to"
+      ][0].slice(0, 19);
 
-      // let dd = this.product["custom_fields"]["_yith_auction_to"][0];
+      let dMatch1 = this.product["custom_fields"]["_yith_auction_to"];
 
-      // this.date = new Date(dd);
+      // let dMatch1 = this.product["auction_end_date"];
+      // var dMatch2 = new Date("month day year hour:min:sec");
 
-      console.log("BEF" + this.product["custom_fields"]);
+      // var date1 = this.product["auction_end_date"];
 
-      console.log(dd);
+      // var date1 = new Date(this.product["auction_end_date"]);
+      // var date2 = new Date();
+
+      var currentDate = new Date();
+      // const date1 = formatDate(dateOfAuction, "dd-MM-yyyy hh:mm:ss", "en-US");
+      // const date1 =  new Date(dateOfAuction);
+      // const date2 = formatDate(currentDate, "dd-MM-yyyy hh:mm:ss", "en-US");
+
+      const date2 = currentDate;
+      // console.log("DATE 1 ====" + date1);
+      console.log("DATE 2 (CURRENT)====" + date2);
+      // console.log("DATE 2 ====" + cValue);
+
+      //best to use .getTime() to compare dates
+      // var dateOne = new Date(date1);
+      var dateOne = new Date(dateOfAuction);
+      var dateTwo = new Date(date2);
+
+      console.log("DATE 1 ====" + dateOne);
+      console.log("DATE 2 (CURRENT)====" + dateTwo);
+
+      if (dateOne > dateTwo) {
+        // alert("Date One is greater than Date Two.");
+        this.AuctionEnded = false;
+      } else {
+        // alert("Date Two is greater than Date One.");
+
+        this.presentToast("Auction has been ended for this product.");
+        this.AuctionEnded = true;
+      }
+
+      // console.log("DATE 1 ====" + dMatch2);
+
+      // console.log(compareDays(objDate,objMinute))
+
+      // let dd = this.product["auction_end_date"];
 
       // let an = "2021-05-29T12:01:00";
+      // var DD23 = this.product["auction_end_date"];
 
-      console.log(JSON.stringify(this.product));
+      // console.log(JSON.stringify(this.product));
+      // const dd2 = formatDate(DD23, "yyyy-MM-dd hh:mm:ss", "en-US");
 
-      this.date = new Date(dd);
+      // console.log("BEF" + DD23);
+
+      this.date = new Date(dateOfAuction);
+
+      console.log("DATE OF AUCTION TO END" + this.date);
     }
 
     // 124-12-2020 12:01:00
@@ -235,6 +292,7 @@ export class ProductPage {
     if (this.product.id) this.handleProduct();
     else this.getProduct();
   }
+
   handleProduct() {
     /* Reward Points */
     if (this.settings.settings.switchRewardPoints && this.product.meta_data)
@@ -328,10 +386,45 @@ export class ProductPage {
       this.options.product_id = this.product.id;
       this.options.quantity = this.quantity;
       this.disableButton = true;
-      await this.api.postItem("add_to_cart", this.options).subscribe(
+      console.log(JSON.stringify("PS") + this.options);
+
+      // if (this.platform.is("hybrid")) {
+      //   console.log("ONE---------------");
+
+      //   await this.api.postItemIonic("add_to_cart", this.options).then(
+      //     (res) => {
+      //       this.cart = res;
+      //       console.log(this.cart);
+
+      //       this.presentToast(this.lan.addToCart);
+      //       this.data.updateCart(this.cart.cart);
+      //       this.disableButton = false;
+      //     },
+      //     (err) => {
+      //       console.log(err);
+      //       this.disableButton = false;
+      //     }
+      //   );
+      // } else {
+      // this.StoredData = JSON.parse(
+      //   this.config.storageGet('CartVal')['__zone_symbol__value']
+      // );
+
+      // this.StoredData.structureRoofStructure = newArray;
+
+      // this.config.storageRemoveItem('InspectionToEdit');
+      // this.config.storageSave('InspectionToEdit', this.StoredData);
+
+      console.log(this.options);
+
+      this.options.user_id = this.settings.customer.id;
+
+      this.api.postItemNew("add_to_cart", this.options).subscribe(
         (res) => {
           this.cart = res;
           console.log(this.cart);
+
+          this.api.cartData = this.cart;
 
           this.presentToast(this.lan.addToCart);
           this.data.updateCart(this.cart.cart);
@@ -342,6 +435,22 @@ export class ProductPage {
           this.disableButton = false;
         }
       );
+      // }
+
+      // await this.api.postItem("add_to_cart", this.options).subscribe(
+      //   (res) => {
+      //     this.cart = res;
+      //     console.log(this.cart);
+
+      //     this.presentToast(this.lan.addToCart);
+      //     this.data.updateCart(this.cart.cart);
+      //     this.disableButton = false;
+      //   },
+      //   (err) => {
+      //     console.log(err);
+      //     this.disableButton = false;
+      //   }
+      // );
     }
   }
   async presentToast(message) {

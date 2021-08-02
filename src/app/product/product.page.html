@@ -252,16 +252,17 @@
         <ion-input [(ngModel)]="quantity" type="number" value="1"></ion-input>
       </ion-item>
 
-      <div class="auctn" *ngIf="!product_type_auction">
-        <ion-button
-          *ngIf="product.type != 'external' && product.type != 'auction' "
-          class="add-to-cart-button"
-          expand="block"
-          (click)="addToCart()"
-          >{{"ADD TO CART" | translate}}</ion-button
-        >
+      <div *ngIf="!AuctionEnded">
+        <div class="auctn" *ngIf="!product_type_auction">
+          <ion-button
+            *ngIf="product.type != 'external' && product.type != 'auction' "
+            class="add-to-cart-button"
+            expand="block"
+            (click)="addToCart()"
+            >{{"ADD TO CART" | translate}}</ion-button
+          >
 
-        <!-- <ion-button
+          <!-- <ion-button
           class="add-to-cart-button"
           color="{{settings.theme.button}}"
           expand="block"
@@ -270,9 +271,10 @@
           (click)="buyExternalProduct()"
           >{{"BUY NOW" | translate}}</ion-button
         > -->
+        </div>
       </div>
-
       <ion-button
+        *ngIf="!AuctionEnded"
         class="add-to-cart-button"
         color="{{settings.theme.button}}"
         expand="block"
@@ -281,22 +283,26 @@
         >{{"CHECKOUT" | translate}}</ion-button
       >
 
-      <p class="ttl Auc" *ngIf="product.type == 'auction'">Auction ends on:</p>
-      <!-- <countdown-timer
+      <div *ngIf="!AuctionEnded">
+        <p class="ttl Auc" *ngIf="product.type == 'auction'">
+          Auction ends on:
+        </p>
+        <!-- <countdown-timer
 
         [end]="date"
       ></countdown-timer> -->
 
-      <lib-angular-countdown-dateTime
-        class="timer_p"
-        *ngIf="product.type == 'auction'"
-        [endDateBind]="date"
-        [dayText]="'day'"
-        [hourText]="'hour'"
-        [minutesText]="'minute'"
-        [secondsText]="'second'"
-      >
-      </lib-angular-countdown-dateTime>
+        <lib-angular-countdown-dateTime
+          class="timer_p"
+          *ngIf="product.type == 'auction'"
+          [endDateBind]="date"
+          [dayText]="'day'"
+          [hourText]="'hour'"
+          [minutesText]="'minute'"
+          [secondsText]="'second'"
+        >
+        </lib-angular-countdown-dateTime>
+      </div>
 
       <!-- <countdown #cd [config]="config" (event)="handleEvent($event)"></countdown> -->
 
@@ -354,29 +360,31 @@
         <!-- <p class="rating_">{{product.average_rating}}</p> -->
       </div>
 
-      <p
-        class="text_bid"
-        *ngIf="product.type == 'auction'"
-        (click)="products__data()"
-      >
-        Your bid
-      </p>
-      <div class="auctions_bar">
-        <input
-          style="width: 70px"
+      <div *ngIf="!AuctionEnded">
+        <p
+          class="text_bid"
           *ngIf="product.type == 'auction'"
-          class="input_num"
-          [(ngModel)]="numb_inp"
-          type="number"
-        />
-
-        <div class="bid_class">
-          <ion-button
+          (click)="products__data()"
+        >
+          Your bid
+        </p>
+        <div class="auctions_bar">
+          <input
+            style="width: 70px"
             *ngIf="product.type == 'auction'"
-            class="Bid-button"
-            (click)="bidProduct(product.id)"
-            >Max Bid</ion-button
-          >
+            class="input_num"
+            [(ngModel)]="numb_inp"
+            type="number"
+          />
+
+          <div class="bid_class">
+            <ion-button
+              *ngIf="product.type == 'auction'"
+              class="Bid-button"
+              (click)="bidProduct(product.id)"
+              >Max Bid</ion-button
+            >
+          </div>
         </div>
       </div>
       <!-- <ion-button

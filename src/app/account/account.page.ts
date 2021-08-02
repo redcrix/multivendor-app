@@ -87,15 +87,14 @@ export class AccountPage {
   shareApp() {
     if (this.platform.is("cordova")) {
       var url = "";
-      if (this.platform.is("android"))
-        url = this.settings.settings.share_app_android_link;
-      else url = this.settings.settings.share_app_ios_link;
+      if (this.platform.is("android")) url = this.settings.playstorelink;
+      else url = this.settings.playstorelink;
       var options = {
-        message: "",
-        subject: "",
+        message: "Opyix Shopping App",
+        subject: "Download Opyix",
         files: ["", ""],
         url: url,
-        chooserTitle: "",
+        chooserTitle: "Explore",
       };
       this.socialSharing.shareWithOptions(options);
     }

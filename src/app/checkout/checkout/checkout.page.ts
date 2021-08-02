@@ -59,26 +59,39 @@ export class CheckoutPage implements OnInit {
       "woocommerce-process-checkout-nonce"
     ] = this.checkoutData.form._wpnonce;
     this.checkoutData.form["wc-ajax"] = "update_order_review";
+    this.checkoutData.form["user_id"] = parseInt(this.settings.customer.id);
     this.setOldWooCommerceVersionData();
     await this.api
       .updateOrderReview("update_order_review", this.checkoutData.form)
       .subscribe(
         (res) => {
-          this.orderReview = res;
-          console.log(
-            "TOTAL AMOUNT TOT PAY" +
-              JSON.stringify(this.orderReview.totals.total)
-          );
+          this.api
+            .updateOrderReview("update_order_review", this.checkoutData.form)
+            .subscribe(
+              (res) => {
+                this.orderReview = res;
+                console.log(
+                  "TOTAL AMOUNT TOT PAY" +
+                    JSON.stringify(this.orderReview.totals.total)
+                );
 
-          //   alert(JSON.stringify(this.orderReview));
-          if (this.orderReview.payment && this.orderReview.payment.paystack) {
-            // alert(1);
-            this.setupPaystack();
-            // this.stripe = Stripe(
-            //   this.orderReview.payment.stripe.publishable_key
-            // );
-            // this.setupStripe();
-          }
+                //   alert(JSON.stringify(this.orderReview));
+                if (
+                  this.orderReview.payment &&
+                  this.orderReview.payment.paystack
+                ) {
+                  // alert(1);
+                  this.setupPaystack();
+                  // this.stripe = Stripe(
+                  //   this.orderReview.payment.stripe.publishable_key
+                  // );
+                  // this.setupStripe();
+                }
+              },
+              (err) => {
+                console.log(err);
+              }
+            );
         },
         (err) => {
           console.log(err);
@@ -96,6 +109,8 @@ export class CheckoutPage implements OnInit {
       "woocommerce-process-checkout-nonce"
     ] = this.checkoutData.form._wpnonce;
     this.checkoutData.form["wc-ajax"] = "update_order_review";
+    this.checkoutData.form["user_id"] = parseInt(this.settings.customer.id);
+
     this.setOldWooCommerceVersionData();
     await this.api
       .updateOrderReview("update_order_review", this.checkoutData.form)
@@ -180,11 +195,22 @@ export class CheckoutPage implements OnInit {
       /*else if (this.checkoutData.form.payment_method == 'braintree_credit_card'){
             this.brainTreePayment();
         }*/
+      this.checkoutData.form.wcfmmp_user_location = "";
+      this.checkoutData.form.wcfmmp_user_location_lat = "";
+      this.checkoutData.form.wcfmmp_user_location_lng = "";
+      this.checkoutData.form.wcfmmp_user_location = this.checkoutData.form.shipping_city;
+      this.checkoutData.form.wcfmmp_user_location_lat = 9.082;
+      this.checkoutData.form.wcfmmp_user_location_lng = 8.6753;
+
+      console.log("FORM DATA+" + JSON.stringify(this.checkoutData.form));
       await this.api
         .ajaxCall("/checkout?wc-ajax=checkout", this.checkoutData.form)
         .subscribe(
           (res) => {
             this.results = res;
+
+            console.log("JSON--->" + JSON.stringify(res));
+
             this.handleOrder();
           },
           (err) => {
@@ -475,6 +501,13 @@ export class CheckoutPage implements OnInit {
     console.log(JSON.stringify(src));
 
     if (src && src.id) {
+      this.checkoutData.form.wcfmmp_user_location = "";
+      this.checkoutData.form.wcfmmp_user_location_lat = "";
+      this.checkoutData.form.wcfmmp_user_location_lng = "";
+      this.checkoutData.form.wcfmmp_user_location = this.checkoutData.form.shipping_city;
+      this.checkoutData.form.wcfmmp_user_location_lat = 9.082;
+      this.checkoutData.form.wcfmmp_user_location_lng = 8.6753;
+
       this.checkoutData.form["paystack_source"] = src.id;
       this.checkoutData.form["stripe_source"] = src.id;
       this.api

@@ -16,13 +16,16 @@ const httpOptions = {
 };
 
 var headers = new Headers();
-headers.append("Content-Type", "application/x-www-form-urlencoded");
+headers.append("Content-Type", "application/json");
+// headers.append("Content-Type", "application/x-www-form-urlencoded");
+headers.append("content-length", "*");
 
 @Injectable({
   providedIn: "root",
 })
 export class ApiService {
   options: any = {};
+  cartData: any;
   constructor(
     private http: HttpClient,
     private config: Config,
@@ -61,6 +64,18 @@ export class ApiService {
     );
   }
 
+  posttNEWItem(endPoint, filter = {}) {
+    const url = this.config.setUrl(
+      "POST",
+      "/wp-json/wc/v3/" + endPoint + "?",
+      filter
+    );
+    return this.http.post(url, filter).pipe(
+      tap((_) => {}),
+      catchError(this.handleError(endPoint))
+    );
+  }
+
   deleteItem(endPoint, id) {
     const url = this.config.setUrl(
       "DELETE",
@@ -92,7 +107,11 @@ export class ApiService {
     for (var key in data) {
       if ("object" !== typeof data[key]) params = params.set(key, data[key]);
     }
+
     params = params.set("lang", this.config.lang);
+
+    console.log("PARAMS" + JSON.stringify(params));
+
     const url =
       this.config.url + "/wp-admin/admin-ajax.php?action=mstoreapp-" + endPoint;
     return this.http.post(url, params, this.config.options).pipe(
@@ -106,7 +125,24 @@ export class ApiService {
     for (var key in data) {
       if ("object" !== typeof data[key]) params = params.set(key, data[key]);
     }
+
     params = params.set("lang", this.config.lang);
+
+    const Username = "opyixgadgets@gmail.com";
+    const Password = "TagztechW@2020";
+    const encoded = btoa(Username + ":" + Password);
+
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: `Basic Auth ${encoded}`,
+    });
+
+    this.options.withCredentials = false;
+    this.options.headers = new HttpHeaders({
+      Authorization: `Basic ${encoded}`,
+    });
+
+    console.log(this.config.options);
+
     const url = this.config.url + "/wp-json/rest-api/v1/" + endPoint;
     return this.http.post(url, params, this.config.options).pipe(
       tap((_) => {}),
@@ -345,6 +381,36 @@ export class ApiService {
     });
   }
 
+  postItemIonic2(endPoint, data, params = {}) {
+    this.ionicHttp.setHeader(
+      this.options,
+      "Content-Type",
+      "application/json; charset=UTF-8"
+    );
+    this.ionicHttp.setDataSerializer("json");
+    const url = this.config.setUrl(
+      "POST",
+      "/wp-json/rest-api/v1/" + endPoint,
+      params
+    );
+
+    var httpHeader = {
+      headers: new HttpHeaders({ "Access-Control-Allow-Origin": "*" }),
+    };
+    return new Promise((resolve) => {
+      this.ionicHttp
+        .post(url, data, {})
+        .then((data) => {
+          console.log(data.data);
+          resolve(data.data);
+        })
+        .catch((error) => {
+          console.log(error.error);
+          resolve(error.error);
+        });
+    });
+  }
+
   postItemIonic(endPoint, data, params = {}) {
     this.ionicHttp.setHeader(
       this.options,
@@ -357,6 +423,10 @@ export class ApiService {
       "/wp-json/wc/v3/" + endPoint + "?",
       params
     );
+
+    var httpHeader = {
+      headers: new HttpHeaders({ "Access-Control-Allow-Origin": "*" }),
+    };
     return new Promise((resolve) => {
       this.ionicHttp
         .post(url, data, {})
