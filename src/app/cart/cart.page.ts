@@ -75,23 +75,28 @@ export class CartPage {
     //     }
     //   );
     // } else {
-    console.log("GET CART--->");
 
-    let data = {
-      user_id: parseInt(this.settings.customer.id),
-    };
-    // get_cart_items
-    this.api.postItemNew("get_cart", data).subscribe(
-      (res) => {
-        this.cart = res;
-        console.log(this.cart);
-        this.data.updateCart(this.cart.cartContents);
-      },
-      (err) => {
-        console.log(err);
-      }
-    );
-    // }
+    if (this.settings.customer.id) {
+      console.log("GET CART--->");
+
+      let data = {
+        user_id: parseInt(this.settings.customer.id),
+      };
+      // get_cart_items
+      this.api.postItemNew("get_cart", data).subscribe(
+        (res) => {
+          this.cart = res;
+          console.log(this.cart);
+          this.data.updateCart(this.cart.cartContents);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+      // }
+    } else {
+      this.login();
+    }
   }
   checkout() {
     if (this.settings.customer.id) {
@@ -103,7 +108,10 @@ export class CartPage {
     this.productData.product = {};
     this.navCtrl.navigateForward(this.router.url + "/product/" + id);
   }
-  async deleteItem(itemKey, qty) {
+  async deleteItem(itemKey, qty, itm) {
+    console.log(itemKey);
+    console.log(itm);
+
     await this.api.postItem("remove_cart_item&item_key=" + itemKey).subscribe(
       (res) => {
         this.cart = res;
@@ -187,6 +195,8 @@ export class CartPage {
   }
 
   async deleteFromCart(id, key) {
+    console.log(id);
+    console.log(key);
     if (
       this.data.cartItem[key].quantity != undefined &&
       this.data.cartItem[key].quantity == 0
@@ -250,13 +260,13 @@ export class CartPage {
         },
       ],
       buttons: [
-        {
-          text: "Checkout as guest",
-          role: "cancel",
-          handler: (data) => {
-            this.navCtrl.navigateForward("/tabs/cart/address");
-          },
-        },
+        // {
+        //   text: "Checkout as guest",
+        //   role: "cancel",
+        //   handler: (data) => {
+        //     this.navCtrl.navigateForward("/tabs/cart/address");
+        //   },
+        // },
         {
           text: "Login",
           handler: (data) => {
@@ -286,7 +296,9 @@ export class CartPage {
           ) {
             this.settings.vendor = true;
           }
-          this.navCtrl.navigateForward("/tabs/cart/address");
+
+          this.getCart();
+          // this.navCtrl.navigateForward("/tabs/cart/address");
         }
       },
       (err) => {

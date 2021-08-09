@@ -144,7 +144,7 @@ export class ApiService {
     console.log(this.config.options);
 
     const url = this.config.url + "/wp-json/rest-api/v1/" + endPoint;
-    return this.http.post(url, params, this.config.options).pipe(
+    return this.http.post(url, params).pipe(
       tap((_) => {}),
       catchError(this.handleError(endPoint))
     );

@@ -203,21 +203,103 @@ export class CheckoutPage implements OnInit {
       this.checkoutData.form.wcfmmp_user_location_lng = 8.6753;
 
       console.log("FORM DATA+" + JSON.stringify(this.checkoutData.form));
-      await this.api
-        .ajaxCall("/checkout?wc-ajax=checkout", this.checkoutData.form)
-        .subscribe(
-          (res) => {
-            this.results = res;
+      // await this.api
+      //   .ajaxCall("/checkout?wc-ajax=checkout", this.checkoutData.form)
+      //   .subscribe(
+      //     (res) => {
+      //       this.results = res;
 
-            console.log("JSON--->" + JSON.stringify(res));
+      //       console.log("JSON--->" + JSON.stringify(res));
 
-            this.handleOrder();
-          },
-          (err) => {
-            this.disableButton = false;
-            console.log(err);
-          }
-        );
+      //       this.handleOrder();
+      //     },
+      //     (err) => {
+      //       this.disableButton = false;
+      //       console.log(err);
+      //     }
+      //   );
+
+      //       Params  : line_items:[{"product_id":434,"quantity":2},{"product_id":674,"variation_id":694,"quantity":1}]
+
+      //                   billing:{"first_name":"John","last_name":"Doe","address_1":"969 Market","address_2":"","city":"San Francisco","state":"CA","postcode":"94103","country":"US","email":"john.doe@example.com","phone":"(555) 555-5555"}
+
+      //                   shipping:{"first_name":"John","last_name":"Doe","address_1":"969 Market","address_2":"","city":"San Francisco","state":"CA","postcode":"94103","country":"US","email":"john.doe@example.com","phone":"(555) 555-5555"}
+
+      // payment_method:cod
+
+      // payment_method_title:Cash on Delivery
+
+      let line_1 = [
+        { product_id: 434, quantity: 2 },
+        { product_id: 674, variation_id: 694, quantity: 1 },
+      ];
+
+      let line_2 = {
+        first_name: "John",
+        last_name: "Doe",
+        address_1: "969 Market",
+        address_2: "",
+        city: "San Francisco",
+        state: "CA",
+        postcode: "94103",
+        country: "US",
+        email: "john.doe@example.com",
+        phone: "(555) 555-5555",
+      };
+
+      var line_3 = {
+        first_name: "John",
+        last_name: "Doe",
+        address_1: "969 Market",
+        address_2: "",
+        city: "San Francisco",
+        state: "CA",
+        postcode: "94103",
+        country: "US",
+        email: "john.doe@example.com",
+        phone: "(555) 555-5555",
+      };
+
+      let data = {
+        line_items: line_1,
+        billing: line_2,
+        shipping: line_3,
+
+        payment_method: this.checkoutData.form.payment_method,
+        user_id: parseInt(this.settings.customer.id),
+        payment_method_title: "Cash on Delivery",
+      };
+
+      console.log();
+      const formData = new FormData();
+      formData.append("user_id", this.settings.customer.id);
+      formData.append("line_items", JSON.stringify(line_1));
+      formData.append("billing", JSON.stringify(line_2));
+      formData.append("shipping", JSON.stringify(line_3));
+      formData.append("payment_method", this.checkoutData.form.payment_method);
+      formData.append("payment_method_title", "Cash on Delivery");
+
+      console.log(data);
+
+      // return;
+      this.api.postItemNew("opyix_custom_checkout", formData).subscribe(
+        (res) => {
+          // this.cart = res;
+          // console.log(this.cart);
+
+          console.log(res);
+          this.handleOrder();
+          // this.api.cartData = this.cart;
+
+          // this.presentToast(this.lan.addToCart);
+          // this.data.updateCart(this.cart.cart);
+          this.disableButton = false;
+        },
+        (err) => {
+          console.log(err);
+          this.disableButton = false;
+        }
+      );
     }
   }
   handleOrder() {
