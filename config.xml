@@ -29,6 +29,9 @@
     <preference name="ShowSplashScreen" value="true" />
     <preference name="ShowSplashScreenSpinner" value="false" />
     <preference name="FadeSplashScreen" value="true" />
+    <config-file overwrite="true" parent="NSLocationWhenInUseUsageDescription" platform="ios" target="*-Info.plist">
+        <string>Allow the app to know your location</string>
+    </config-file>
     <platform name="android">
         <preference name="android-targetSdkVersion" value="29" />
         <config-file parent="application" target="AndroidManifest.xml">

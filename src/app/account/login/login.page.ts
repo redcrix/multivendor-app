@@ -123,6 +123,8 @@ export class LoginPage implements OnInit {
           })
           .subscribe(
             (res) => {
+              console.log("APPLE ---" + JSON.stringify(res));
+
               this.status = res;
               // alert("GOOGLE RESPONSE----->>>" + JSON.stringify(res));
               // alert(JSON.stringify(this.status));
@@ -160,9 +162,7 @@ export class LoginPage implements OnInit {
       .catch((err: AppleSignInErrorResponse) => {
         console.log(err);
         this.googleStatus = err;
-        alert(
-          "AppleSignInErrorResponse RESPONSE----->>>" + JSON.stringify(err)
-        );
+        alert("Error login" + JSON.stringify(err));
         // this.googleLogingInn = false;
       });
 

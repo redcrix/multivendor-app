@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { NavController } from "@ionic/angular";
+import { NavController, ToastController } from "@ionic/angular";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { CheckoutData } from "../../data/checkout";
@@ -20,7 +20,8 @@ export class CheckoutAddressPage implements OnInit {
     public router: Router,
     public navCtrl: NavController,
     public settings: Settings,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
+    public toastController: ToastController
   ) {}
   ngOnInit() {
     this.getCheckoutForm();
@@ -90,7 +91,38 @@ export class CheckoutAddressPage implements OnInit {
     );
   }
 
+  isValidMailFormat(control) {
+    let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+
+    if (control != "" && (control.length <= 5 || !EMAIL_REGEXP.test(control))) {
+      return { value: true };
+    }
+
+    return null;
+  }
+
+  async presentToast(message) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      position: "top",
+    });
+    toast.present();
+  }
+
   continueCheckout() {
+    // checkoutData.form.billing_email
+    let Val = this.isValidMailFormat(this.checkoutData.form.billing_email);
+
+    console.log(Val);
+
+    if (Val != null) {
+      if (Val.value === true) {
+        this.presentToast("Please provide valid email");
+        return false;
+      }
+    }
+
     this.errorMessage = "";
 
     if (this.validateForm()) {

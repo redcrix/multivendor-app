@@ -142,12 +142,50 @@ export class ApiService {
     });
 
     console.log(this.config.options);
-
     const url = this.config.url + "/wp-json/rest-api/v1/" + endPoint;
     return this.http.post(url, params).pipe(
       tap((_) => {}),
       catchError(this.handleError(endPoint))
     );
+  }
+
+  customCheckout(endPoint, data) {
+    const url = this.config.url + "/wp-json/rest-api/v1/" + endPoint;
+    return this.http.post(url, data);
+  }
+
+  postItemNew2(endPoint, data = {}) {
+    var params = new HttpParams();
+    for (var key in data) {
+      if ("object" !== typeof data[key]) params = params.set(key, data[key]);
+    }
+
+    params = params.set("lang", this.config.lang);
+
+    const Username = "opyixgadgets@gmail.com";
+    const Password = "TagztechW@2020";
+    const encoded = btoa(Username + ":" + Password);
+
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: `Basic Auth ${encoded}`,
+    });
+
+    this.options.withCredentials = false;
+    this.options.headers = new HttpHeaders({
+      Authorization: `Basic ${encoded}`,
+    });
+
+    this.ionicHttp.setDataSerializer("multipart");
+
+    console.log(params);
+
+    console.log(this.config.options);
+    const url = this.config.url + "/wp-json/rest-api/v1/" + endPoint;
+    // return this.ionicHttp.post(url, params, {}).pipe(
+    //   tap((_) => {}),
+    //   catchError(this.handleError(endPoint))
+    // );
+    return this.ionicHttp.post(url, params, {});
   }
 
   postItem_Custom(endPoint, data = {}) {

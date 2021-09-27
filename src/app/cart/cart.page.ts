@@ -14,6 +14,7 @@ import { HttpParams } from "@angular/common/http";
 import { Product } from "../data/product";
 import { Platform } from "@ionic/angular";
 // import { Storage } from "@ionic/storage-angular";
+import { Storage } from "@ionic/storage";
 
 @Component({
   selector: "app-cart",
@@ -27,6 +28,8 @@ export class CartPage {
   status: any;
   loginForm: any = {};
   errors: any;
+  LocalCart = false;
+  Localcartdata: any;
   constructor(
     private alertCtrl: AlertController,
     public toastController: ToastController,
@@ -39,12 +42,19 @@ export class CartPage {
     public navCtrl: NavController,
     public route: ActivatedRoute,
     public productData: Product,
-    public platform: Platform
+    public platform: Platform,
+    public storage: Storage
   ) {}
   ngOnInit() {}
   ionViewDidEnter() {
     this.getCart();
   }
+  generateArray(obj) {
+    return Object.keys(obj).map((key) => {
+      return obj[key];
+    });
+  }
+
   async getCart() {
     // await this.api.postItem('cart').subscribe(res => {
     //     this.cart = res;
@@ -77,25 +87,82 @@ export class CartPage {
     // } else {
 
     if (this.settings.customer.id) {
+      this.LocalCart = false;
+
       console.log("GET CART--->");
 
       let data = {
         user_id: parseInt(this.settings.customer.id),
+        coupan_code: "test",
       };
       // get_cart_items
-      this.api.postItemNew("get_cart", data).subscribe(
+      this.api.postItemNew("get_cart_items", data).subscribe(
         (res) => {
           this.cart = res;
           console.log(this.cart);
-          this.data.updateCart(this.cart.cartContents);
+          // --- V CODE
+          let amm = this.generateArray(this.cart.cart_contents);
+          console.log(amm);
+          console.log(JSON.stringify(amm));
+          // for (var key in this.cart.cart_contents) {
+          //   // skip loop if the property is from prototype
+          //   if (!this.cart.cart_contents.hasOwnProperty(key)) continue;
+
+          //   var obj = this.cart.cart_contents[key];
+          //   for (var prop in obj) {
+          //     // skip loop if the property is from prototype
+          //     if (!obj.hasOwnProperty(prop)) continue;
+
+          //     // your code
+          //     console.log("V CODE" + obj);
+
+          //     // alert(prop + " = " + obj[prop]);
+          //   }
+          // }
+
+          const map = (obj, fun) =>
+            Object.entries(obj).reduce(
+              (prev, [key, value]) => ({
+                ...prev,
+                [key]: fun(key, value),
+              }),
+              {}
+            );
+
+          const myFruits = map(this.cart.cart_contents, (_, o) => {
+            return {
+              product_id: o.product_id,
+              quantity: o.quantity,
+              variation_id: o.variation_id,
+            };
+          });
+
+          console.log("myFruitsmyFruits" + JSON.stringify(myFruits));
+
+          console.log("myFruitsmyFruits" + JSON.stringify(myFruits["unique"]));
+          // {"dd458505749b2941217ddd59394240e8":{"product_id":"568","quantity":1,"variation_id":"556"},"a7d8ae4569120b5bec12e7b6e9648b86":{"product_id":"1176","quantity":2,"variation_id":"1192"}}
+
+          this.data.updateCart(this.cart.cart_contents);
         },
         (err) => {
           console.log(err);
         }
       );
-      // }
     } else {
-      this.login();
+      this.LocalCart = true;
+      let da;
+      let da2;
+
+      let CartItem = JSON.parse(
+        this.storageGet("cartItem")["__zone_symbol__value"]
+      );
+
+      // da2 = localStorage.getItem("cartItem");
+
+      console.log(JSON.stringify(CartItem));
+      // console.log(JSON.stringify(da2));
+      this.Localcartdata = CartItem;
+      // this.login();
     }
   }
   checkout() {
@@ -104,23 +171,67 @@ export class CartPage {
     } else this.login();
   }
 
+  async storageGet(get) {
+    let val2 = localStorage.getItem(get);
+    this.storage.get(get).then((val) => {
+      let val2 = val;
+      return val2;
+    });
+    return val2;
+  }
+
   getProduct(id) {
     this.productData.product = {};
     this.navCtrl.navigateForward(this.router.url + "/product/" + id);
   }
-  async deleteItem(itemKey, qty, itm) {
+  async deleteItem(itemKey, qty) {
     console.log(itemKey);
-    console.log(itm);
+    // console.log(itm);
 
-    await this.api.postItem("remove_cart_item&item_key=" + itemKey).subscribe(
+    let data = {
+      user_id: JSON.parse(this.settings.customer.id),
+      cart_item_key: itemKey,
+      action: "remove",
+    };
+    var params = new HttpParams();
+    params = params.set("user_id", this.settings.customer.id);
+    params = params.set("cart_item_key", itemKey);
+    params = params.set("action", "remove");
+
+    // params = params.set("_wpnonce", this.cart.cart_nonce);
+    // params = params.set(
+    //   "_wp_http_referer",
+    //   this.config.url + "/wp-admin/admin-ajax.php?action=mstoreapp-cart"
+    // );
+    params = params.set("update_cart", "Update Cart");
+
+    console.log(itemKey);
+
+    console.log("PARAMS ------");
+
+    this.api.postItemNew("_remove_cart_item", data).subscribe(
       (res) => {
-        this.cart = res;
-        this.data.updateCart(this.cart.cart_contents);
+        console.log(JSON.stringify(res));
+
+        this.getCart();
+        // this.cart = res;
+        // console.log(this.cart);
+        // this.data.updateCart(this.cart.cartContents);
       },
       (err) => {
         console.log(err);
       }
     );
+
+    // await this.api.postItem("remove_cart_item&item_key=" + itemKey).subscribe(
+    //   (res) => {
+    //     this.cart = res;
+    //     this.data.updateCart(this.cart.cart_contents);
+    //   },
+    //   (err) => {
+    //     console.log(err);
+    //   }
+    // );
   }
   async submitCoupon(coupon) {
     await this.api
@@ -182,16 +293,32 @@ export class CartPage {
     );
     params = params.set("update_cart", "Update Cart");
 
-    await this.api.updateCart("/cart/", params).subscribe(
+    let data = {
+      user_id: parseInt(this.settings.customer.id),
+      product_id: id,
+      quantity: 1,
+    };
+
+    this.api.postItemNew("_add_to_cart", data).subscribe(
       (res) => {
-        console.log(res);
-        this.cart = res;
-        this.data.updateCart(this.cart.cart_contents);
+        this.getCart();
       },
       (err) => {
         console.log(err);
+        // this.disableButton = false;
       }
     );
+
+    // await this.api.updateCart("/cart/", params).subscribe(
+    //   (res) => {
+    //     console.log(res);
+    //     this.cart = res;
+    //     this.data.updateCart(this.cart.cart_contents);
+    //   },
+    //   (err) => {
+    //     console.log(err);
+    //   }
+    // );
   }
 
   async deleteFromCart(id, key) {
@@ -212,27 +339,48 @@ export class CartPage {
     }
 
     var params = new HttpParams();
+    params = params.set("user_id", this.settings.customer.id);
+    params = params.set("cart_item_key", key);
+    params = params.set("action", "remove");
     params = params.set(
       "cart[" + key + "][qty]",
       this.data.cartItem[key].quantity
     );
-    params = params.set("_wpnonce", this.cart.cart_nonce);
-    params = params.set(
-      "_wp_http_referer",
-      this.config.url + "/wp-admin/admin-ajax.php?action=mstoreapp-cart"
-    );
+    // params = params.set("_wpnonce", this.cart.cart_nonce);
+    // params = params.set(
+    //   "_wp_http_referer",
+    //   this.config.url + "/wp-admin/admin-ajax.php?action=mstoreapp-cart"
+    // );
     params = params.set("update_cart", "Update Cart");
 
-    await this.api.updateCart("/cart/", params).subscribe(
+    console.log(key);
+
+    console.log("PARAMS ------");
+
+    this.api.postItemNew("_remove_cart_item", params).subscribe(
       (res) => {
-        console.log(res);
-        this.cart = res;
-        this.data.updateCart(this.cart.cart_contents);
+        console.log(JSON.stringify(res));
+
+        this.getCart();
+        // this.cart = res;
+        // console.log(this.cart);
+        // this.data.updateCart(this.cart.cartContents);
       },
       (err) => {
         console.log(err);
       }
     );
+
+    // await this.api.updateCart("/cart/", params).subscribe(
+    //   (res) => {
+    //     console.log(res);
+    //     this.cart = res;
+    //     this.data.updateCart(this.cart.cart_contents);
+    //   },
+    //   (err) => {
+    //     console.log(err);
+    //   }
+    // );
   }
   //----------Rewrad-----------------//
   redeem() {
@@ -260,13 +408,13 @@ export class CartPage {
         },
       ],
       buttons: [
-        // {
-        //   text: "Checkout as guest",
-        //   role: "cancel",
-        //   handler: (data) => {
-        //     this.navCtrl.navigateForward("/tabs/cart/address");
-        //   },
-        // },
+        {
+          text: "Cancel",
+          role: "cancel",
+          handler: (data) => {
+            console.log("Confirm Cancel:");
+          },
+        },
         {
           text: "Login",
           handler: (data) => {
@@ -321,5 +469,140 @@ export class CartPage {
       position: "top",
     });
     toast.present();
+  }
+
+  addToCart2(n) {
+    console.log(n);
+    // console.log(JSON.stringify(n));
+
+    // this.selectAdons();
+    // this.setVariations2();
+
+    // console.log(this.options);
+
+    let CartItem = JSON.parse(
+      this.storageGet("cartItem")["__zone_symbol__value"]
+    );
+
+    if (CartItem != undefined) {
+      const total = CartItem.cart_contents.reduce(
+        (sum, item) => sum + item.price,
+        0
+      );
+
+      console.log(total);
+      console.log(total + n.price);
+
+      console.log(CartItem);
+      console.log(CartItem.cart_contents);
+      CartItem.cart_contents.push({
+        product_id: n.product_id,
+        variation_id: n.variation_id,
+        variation: n.variation,
+        quantity: 1,
+        name: n.name,
+        thumb: n.thumb,
+        price: n.price,
+        tax_price: n.tax_price,
+      });
+
+      CartItem.cart_totals = {
+        subtotal: total + n.price,
+        subtotal_tax: total + n.price,
+        total: total + n.price,
+        total_tax: n.tax_price,
+      };
+
+      console.log(CartItem);
+
+      this.storage.remove("cartItem");
+      localStorage.removeItem("cartItem");
+      this.storage.set("cartItem", CartItem);
+      localStorage.setItem("cartItem", JSON.stringify(CartItem));
+
+      let CartItem2 = JSON.parse(
+        this.storageGet("cartItem")["__zone_symbol__value"]
+      );
+
+      // da2 = localStorage.getItem("cartItem");
+
+      console.log(JSON.stringify(CartItem2));
+      // console.log(JSON.stringify(da2));
+      this.Localcartdata = CartItem2;
+    } else {
+      let data = {
+        cart_contents: [
+          {
+            product_id: n.product_id,
+            variation_id: n.variation_id,
+            variation: n.variation,
+            quantity: 1,
+            name: n.name,
+            thumb: n.thumb,
+            price: n.price,
+            tax_price: n.tax_price,
+          },
+        ],
+
+        cart_totals: {
+          subtotal: n.tax_price,
+          subtotal_tax: n.tax_price,
+          total: n.price,
+          total_tax: n.tax_price,
+        },
+      };
+
+      console.log(data);
+
+      this.storage.remove("cartItem");
+      localStorage.removeItem("cartItem");
+      this.storage.set("cartItem", data);
+      localStorage.setItem("cartItem", JSON.stringify(data));
+
+      let CartItem2 = JSON.parse(
+        this.storageGet("cartItem")["__zone_symbol__value"]
+      );
+
+      // da2 = localStorage.getItem("cartItem");
+
+      console.log(JSON.stringify(CartItem2));
+      // console.log(JSON.stringify(da2));
+      this.Localcartdata = CartItem2;
+    }
+    this.presentToast("Added to cart");
+    // this.login2();
+  }
+
+  deleteFromCart2(product_id) {
+    console.log(product_id.product_id);
+
+    let CartItem2 = JSON.parse(
+      this.storageGet("cartItem")["__zone_symbol__value"]
+    );
+
+    console.log(CartItem2.cart_contents);
+    let dmm = CartItem2.cart_contents.filter(
+      (item) => parseInt(item.product_id) !== parseInt(product_id.product_id)
+    );
+
+    console.log(this.Localcartdata.cart_contents);
+    console.log(dmm);
+    this.Localcartdata.cart_contents = dmm;
+
+    CartItem2.cart_contents = dmm;
+
+    // CartItem.cart_totals = {
+    //   subtotal: total + n.price,
+    //   subtotal_tax: total + n.price,
+    //   total: total + n.price,
+    //   total_tax: n.tax_price,
+    // };
+
+    console.log(CartItem2);
+
+    this.storage.remove("cartItem");
+    localStorage.removeItem("cartItem");
+    this.storage.set("cartItem", CartItem2);
+    localStorage.setItem("cartItem", JSON.stringify(CartItem2));
   }
 }

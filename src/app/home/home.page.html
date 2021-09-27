@@ -26,13 +26,6 @@
         (click)="cart_page()"
         name="cart-outline"
       ></ion-icon>
-
-      <ion-icon
-        *ngIf="!allContent"
-        (click)="close_deals_page()"
-        class="cart_icn"
-        name="close-outline"
-      ></ion-icon>
     </ion-buttons>
   </ion-toolbar>
   <div class="btns">
@@ -81,7 +74,15 @@
     <div *ngIf="data.blocks?.on_sale?.length" class="related-products">
       <ion-list-header>
         <ion-label>{{"Deals" | translate}}</ion-label>
+
+        <ion-icon
+          *ngIf="!allContent"
+          (click)="close_deals_page()"
+          class="cart_icn deal"
+          name="close-outline"
+        ></ion-icon>
       </ion-list-header>
+
       <div class="scroll-related-products">
         <div
           class="product"

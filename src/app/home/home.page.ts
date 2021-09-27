@@ -357,7 +357,7 @@ export class HomePage {
     this.navCtrl.navigateForward("/tabs/categories");
   }
   go_DealsPage() {
-    this.allContent = false;
+    this.allContent = !this.allContent;
   }
 
   close_deals_page() {

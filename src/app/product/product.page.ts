@@ -23,6 +23,8 @@ import { InAppBrowserOptions } from "@ionic-native/in-app-browser/ngx";
 import { Platform } from "@ionic/angular";
 // import { Storage } from "@ionic/storage-angular";
 
+import { Storage } from "@ionic/storage";
+
 @Component({
   selector: "app-product",
   templateUrl: "product.page.html",
@@ -92,7 +94,8 @@ export class ProductPage {
     public route: ActivatedRoute,
     public vendor: Vendor,
     public iab: InAppBrowser,
-    public platform: Platform
+    public platform: Platform,
+    public storage: Storage
   ) {
     // if (this.settings.customer.id == undefined) {
     //   this.NewUser = true;
@@ -372,87 +375,153 @@ export class ProductPage {
     var path = this.router.url.substring(0, endIndex);
     this.navCtrl.navigateForward(path + "/" + product.id);
   }
-  async addToCart() {
-    if (
-      this.product.manage_stock &&
-      this.product.stock_quantity < this.data.cart[this.product.id]
-    ) {
-      this.presentAlert(this.lan.message, this.lan.lowQuantity);
-    } else if (
-      this.selectAdons() &&
-      this.setVariations2() &&
-      this.setGroupedProducts()
-    ) {
-      this.options.product_id = this.product.id;
-      this.options.quantity = this.quantity;
-      this.disableButton = true;
-      console.log(JSON.stringify("PS") + this.options);
+  async addToCart(n) {
+    if (this.settings.customer.id) {
+      if (
+        this.product.manage_stock &&
+        this.product.stock_quantity < this.data.cart[this.product.id]
+      ) {
+        this.presentAlert(this.lan.message, this.lan.lowQuantity);
+      } else if (
+        this.selectAdons() &&
+        this.setVariations2() &&
+        this.setGroupedProducts()
+      ) {
+        this.options.product_id = this.product.id;
+        this.options.quantity = this.quantity;
+        this.disableButton = true;
+        console.log(JSON.stringify("PS") + this.options);
 
-      // if (this.platform.is("hybrid")) {
-      //   console.log("ONE---------------");
+        this.options.user_id = this.settings.customer.id;
 
-      //   await this.api.postItemIonic("add_to_cart", this.options).then(
-      //     (res) => {
-      //       this.cart = res;
-      //       console.log(this.cart);
+        console.log(JSON.stringify(this.product));
+        console.log(this.options);
 
-      //       this.presentToast(this.lan.addToCart);
-      //       this.data.updateCart(this.cart.cart);
-      //       this.disableButton = false;
-      //     },
-      //     (err) => {
-      //       console.log(err);
-      //       this.disableButton = false;
-      //     }
-      //   );
-      // } else {
-      // this.StoredData = JSON.parse(
-      //   this.config.storageGet('CartVal')['__zone_symbol__value']
-      // );
+        this.api.postItemNew("_add_to_cart", this.options).subscribe(
+          (res) => {
+            this.cart = res;
+            console.log(this.cart);
 
-      // this.StoredData.structureRoofStructure = newArray;
+            this.api.cartData = this.cart;
 
-      // this.config.storageRemoveItem('InspectionToEdit');
-      // this.config.storageSave('InspectionToEdit', this.StoredData);
+            this.presentToast(this.lan.addToCart);
+            this.data.updateCart(this.cart.cart);
+            this.disableButton = false;
+          },
+          (err) => {
+            console.log(err);
+            this.disableButton = false;
+          }
+        );
+        // }
+
+        // await this.api.postItem("add_to_cart", this.options).subscribe(
+        //   (res) => {
+        //     this.cart = res;
+        //     console.log(this.cart);
+
+        //     this.presentToast(this.lan.addToCart);
+        //     this.data.updateCart(this.cart.cart);
+        //     this.disableButton = false;
+        //   },
+        //   (err) => {
+        //     console.log(err);
+        //     this.disableButton = false;
+        //   }
+        // );
+      }
+    } else {
+      console.log(n);
+      // console.log(JSON.stringify(n));
+
+      this.selectAdons();
+      this.setVariations2();
 
       console.log(this.options);
 
-      this.options.user_id = this.settings.customer.id;
-
-      this.api.postItemNew("add_to_cart", this.options).subscribe(
-        (res) => {
-          this.cart = res;
-          console.log(this.cart);
-
-          this.api.cartData = this.cart;
-
-          this.presentToast(this.lan.addToCart);
-          this.data.updateCart(this.cart.cart);
-          this.disableButton = false;
-        },
-        (err) => {
-          console.log(err);
-          this.disableButton = false;
-        }
+      let CartItem = JSON.parse(
+        this.storageGet("cartItem")["__zone_symbol__value"]
       );
-      // }
 
-      // await this.api.postItem("add_to_cart", this.options).subscribe(
-      //   (res) => {
-      //     this.cart = res;
-      //     console.log(this.cart);
+      if (CartItem != undefined) {
+        const total = CartItem.cart_contents.reduce(
+          (sum, item) => sum + item.price,
+          0
+        );
 
-      //     this.presentToast(this.lan.addToCart);
-      //     this.data.updateCart(this.cart.cart);
-      //     this.disableButton = false;
-      //   },
-      //   (err) => {
-      //     console.log(err);
-      //     this.disableButton = false;
-      //   }
-      // );
+        console.log(total);
+        console.log(total + n.price);
+
+        console.log(CartItem);
+        console.log(CartItem.cart_contents);
+        CartItem.cart_contents.push({
+          product_id: n.id,
+          variation_id: this.options.variation_id,
+          variation: this.options.variation,
+          quantity: 1,
+          name: n.name,
+          thumb: n.images[0].src,
+          price: n.price,
+          tax_price: n.tax_price,
+        });
+
+        CartItem.cart_totals = {
+          subtotal: total + n.price,
+          subtotal_tax: total + n.price,
+          total: total + n.price,
+          total_tax: n.tax_price,
+        };
+
+        console.log(CartItem);
+
+        this.storage.remove("cartItem");
+        localStorage.removeItem("cartItem");
+        this.storage.set("cartItem", CartItem);
+        localStorage.setItem("cartItem", JSON.stringify(CartItem));
+      } else {
+        let data = {
+          cart_contents: [
+            {
+              product_id: n.id,
+              variation_id: this.options.variation_id,
+              variation: this.options.variation,
+              quantity: 1,
+              name: n.name,
+              thumb: n.images[0].src,
+              price: n.price,
+              tax_price: n.tax_price,
+            },
+          ],
+
+          cart_totals: {
+            subtotal: n.tax_price,
+            subtotal_tax: n.tax_price,
+            total: n.price,
+            total_tax: n.tax_price,
+          },
+        };
+
+        console.log(data);
+
+        this.storage.remove("cartItem");
+        localStorage.removeItem("cartItem");
+        this.storage.set("cartItem", data);
+        localStorage.setItem("cartItem", JSON.stringify(data));
+      }
+      this.presentToast(this.lan.addToCart);
+      // this.login2();
     }
   }
+
+  async storageGet(get) {
+    let val2 = localStorage.getItem(get);
+    this.storage.get(get).then((val) => {
+      let val2 = val;
+      return val2;
+    });
+    return val2;
+  }
+
   async presentToast(message) {
     const toast = await this.toastController.create({
       message: message,
@@ -497,11 +566,7 @@ export class ProductPage {
     ) {
       for (var i = 0; i < this.product.variationOptions.length; i++) {
         if (this.product.variationOptions[i].selected != null) {
-          this.options[
-            "variation[attribute_" +
-              this.product.variationOptions[i].attribute +
-              "]"
-          ] = this.product.variationOptions[i].selected;
+          this.options["variation"] = this.product.variationOptions[i].selected;
         } else if (
           this.product.variationOptions[i].selected == null &&
           this.product.variationOptions[i].options.length != 0
@@ -662,7 +727,7 @@ export class ProductPage {
   checkout(n) {
     console.log(n);
 
-    this.addToCart();
+    this.addToCart(n);
     if (this.settings.customer.id) {
       this.navCtrl.navigateForward("/tabs/cart/address");
     } else this.login();
@@ -701,6 +766,41 @@ export class ProductPage {
     });
     alert.present();
   }
+
+  async login2() {
+    let alert = await this.alertController.create({
+      header: "Login and continue",
+      inputs: [
+        {
+          name: "username",
+          placeholder: "Email/Username",
+          type: "text",
+        },
+        {
+          name: "password",
+          placeholder: "Password",
+          type: "text",
+        },
+      ],
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+          handler: (data) => {
+            console.log("Confirm Cancel:");
+          },
+        },
+        {
+          text: "Login",
+          handler: (data) => {
+            this.onSubmit(data);
+          },
+        },
+      ],
+    });
+    alert.present();
+  }
+
   async onSubmit(userData) {
     this.loginForm.username = userData.username;
     this.loginForm.password = userData.password;

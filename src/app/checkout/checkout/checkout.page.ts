@@ -4,6 +4,7 @@ import {
   NavController,
   Platform,
   ToastController,
+  AlertController,
 } from "@ionic/angular";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ApiService } from "../../api.service";
@@ -14,6 +15,8 @@ import { OneSignal } from "@ionic-native/onesignal/ngx";
 //import { CardIO } from '@ionic-native/card-io/ngx';
 //import { Braintree, ApplePayOptions, PaymentUIOptions, PaymentUIResult } from '@ionic-native/braintree/ngx';
 declare var Stripe;
+import { Storage } from "@ionic/storage";
+
 @Component({
   selector: "app-checkout",
   templateUrl: "./checkout.page.html",
@@ -37,7 +40,10 @@ export class CheckoutPage implements OnInit {
   cardResponse: any = {};
   stripeForm: any = {};
   stripePaymentOnly = true;
+  cart: any;
+  newArray: any;
   constructor(
+    private alertCtrl: AlertController,
     private oneSignal: OneSignal,
     public toastController: ToastController,
     public platform: Platform,
@@ -48,11 +54,16 @@ export class CheckoutPage implements OnInit {
     public iab: InAppBrowser,
     public loadingController: LoadingController,
     public navCtrl: NavController,
-    public route: ActivatedRoute /*, private braintree: Braintree*/
+    public route: ActivatedRoute /*, private braintree: Braintree*/,
+    public storage: Storage
   ) {}
   ngOnInit() {
     this.updateOrder();
   }
+  ionViewDidEnter() {
+    this.getCart();
+  }
+
   async updateOrder() {
     this.checkoutData.form.security = this.checkoutData.form.nonce.update_order_review_nonce;
     this.checkoutData.form[
@@ -123,6 +134,146 @@ export class CheckoutPage implements OnInit {
         }
       );
   }
+  generateArray(obj) {
+    return Object.keys(obj).map((key) => {
+      return obj[key];
+    });
+  }
+
+  async getCart() {
+    if (this.settings.customer.id) {
+      console.log("GET CART--->");
+
+      let data = {
+        user_id: parseInt(this.settings.customer.id),
+        coupan_code: "test",
+      };
+      // get_cart_items
+      this.api.postItemNew("get_cart_items", data).subscribe(
+        (res) => {
+          this.cart = res;
+          // console.log(this.cart);
+          // this.data.updateCart(this.cart.cart_contents);
+
+          let line_1 = [
+            { product_id: 434, quantity: 2 },
+            { product_id: 674, variation_id: 694, quantity: 1 },
+          ];
+          // let rmv = [];
+
+          // rmv.push(this.cart.cart_contents);
+          console.log(line_1);
+          // console.log(rmv);
+          // var newArray = rmv.map((o) => {
+          //   return {
+          //     product_id: o.product_id,
+          //     quantity: o.quantity,
+          //     variation_id: o.variation_id,
+          //   };
+          // });
+
+          var validation_messages = {
+            key_1: {
+              your_name: "jimmy",
+              your_msg: "hello world",
+            },
+            key_2: {
+              your_name: "billy",
+              your_msg: "foo equals bar",
+            },
+          };
+
+          for (var key in this.cart.cart_contents) {
+            // skip loop if the property is from prototype
+            if (!this.cart.cart_contents.hasOwnProperty(key)) continue;
+
+            var obj = this.cart.cart_contents[key];
+            for (var prop in obj) {
+              // skip loop if the property is from prototype
+              if (!obj.hasOwnProperty(prop)) continue;
+
+              // your code
+              console.log("V CODE" + JSON.stringify(obj));
+
+              // alert(prop + " = " + obj[prop]);
+            }
+          }
+          const map = (obj, fun) =>
+            Object.entries(obj).reduce(
+              (prev, [key, value]) => ({
+                ...prev,
+                [key]: fun(key, value),
+              }),
+              {}
+            );
+
+          const map2 = (obj, fun) =>
+            Object.entries(obj).reduce(
+              (prev, [key, value]) => ({
+                ...prev,
+                [key]: fun(key, value),
+              }),
+              {}
+            );
+
+          const myFruits = map(this.cart.cart_contents, (_, o) => {
+            return {
+              product_id: o.product_id,
+              quantity: o.quantity,
+              variation_id: o.variation_id,
+            };
+          });
+
+          console.log("myFruitsmyFruits" + JSON.stringify(myFruits));
+
+          console.log("myFruitsmyFruits" + JSON.stringify(myFruits["unique"]));
+          // {"dd458505749b2941217ddd59394240e8":{"product_id":"568","quantity":1,"variation_id":"556"},"a7d8ae4569120b5bec12e7b6e9648b86":{"product_id":"1176","quantity":2,"variation_id":"1192"}}
+
+          var data = [
+              { Key: "A", Data: "1" },
+              { Key: "B", Data: "2" },
+              { Key: "C", Data: "12" },
+              { Key: "A", Data: "6" },
+              { Key: "B", Data: "4" },
+            ],
+            hash = Object.create(null),
+            result = data.reduce(function (r, o) {
+              if (!hash[o.Key]) {
+                hash[o.Key] = { Key: o.Key, Value: [] };
+                r.push(hash[o.Key]);
+              }
+              hash[o.Key].Value.push({ Data: o.Data });
+              return r;
+            }, []);
+
+          console.log(result);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    } else {
+      this.login();
+    }
+  }
+
+  async login() {
+    let alert = await this.alertCtrl.create({
+      header: "Login session expired.",
+
+      buttons: [
+        {
+          text: "Dismiss",
+          role: "cancel",
+          handler: (data) => {
+            console.log("Confirm Cancel:");
+          },
+        },
+      ],
+    });
+    alert.present();
+  }
+
   setOldWooCommerceVersionData() {
     this.checkoutData.form.city = this.checkoutData.form.billing_city;
     this.checkoutData.form.postcode = this.checkoutData.form.billing_postcode;
@@ -140,6 +291,15 @@ export class CheckoutPage implements OnInit {
     console.log(results);
     //
   }
+  async storageGet(get) {
+    let val2 = localStorage.getItem(get);
+    this.storage.get(get).then((val) => {
+      let val2 = val;
+      return val2;
+    });
+    return val2;
+  }
+
   async placeOrder() {
     this.disableButton = true;
     this.errorMessage = undefined;
@@ -192,9 +352,6 @@ export class CheckoutPage implements OnInit {
       //       }
       //     );
     } else {
-      /*else if (this.checkoutData.form.payment_method == 'braintree_credit_card'){
-            this.brainTreePayment();
-        }*/
       this.checkoutData.form.wcfmmp_user_location = "";
       this.checkoutData.form.wcfmmp_user_location_lat = "";
       this.checkoutData.form.wcfmmp_user_location_lng = "";
@@ -203,61 +360,107 @@ export class CheckoutPage implements OnInit {
       this.checkoutData.form.wcfmmp_user_location_lng = 8.6753;
 
       console.log("FORM DATA+" + JSON.stringify(this.checkoutData.form));
-      // await this.api
-      //   .ajaxCall("/checkout?wc-ajax=checkout", this.checkoutData.form)
-      //   .subscribe(
-      //     (res) => {
-      //       this.results = res;
-
-      //       console.log("JSON--->" + JSON.stringify(res));
-
-      //       this.handleOrder();
-      //     },
-      //     (err) => {
-      //       this.disableButton = false;
-      //       console.log(err);
-      //     }
-      //   );
-
-      //       Params  : line_items:[{"product_id":434,"quantity":2},{"product_id":674,"variation_id":694,"quantity":1}]
-
-      //                   billing:{"first_name":"John","last_name":"Doe","address_1":"969 Market","address_2":"","city":"San Francisco","state":"CA","postcode":"94103","country":"US","email":"john.doe@example.com","phone":"(555) 555-5555"}
-
-      //                   shipping:{"first_name":"John","last_name":"Doe","address_1":"969 Market","address_2":"","city":"San Francisco","state":"CA","postcode":"94103","country":"US","email":"john.doe@example.com","phone":"(555) 555-5555"}
-
-      // payment_method:cod
-
-      // payment_method_title:Cash on Delivery
 
       let line_1 = [
         { product_id: 434, quantity: 2 },
         { product_id: 674, variation_id: 694, quantity: 1 },
       ];
+      let rmv = [];
 
+      rmv.push(this.cart.cart_contents);
+      console.log(line_1);
+      console.log(rmv);
+
+      let amm = this.generateArray(this.cart.cart_contents);
+      console.log(amm);
+
+      let CartItem = JSON.parse(
+        this.storageGet("cartItem")["__zone_symbol__value"]
+      );
+
+      var newArray = amm.map((o) => {
+        return {
+          product_id: parseInt(o.product_id),
+          quantity: o.quantity,
+          variation_id: o.variation_id,
+        };
+      });
+
+      // if (CartItem != undefined) {
+      //   this.newArray = CartItem.cart_contents.map((o) => {
+      //     return {
+      //       product_id: parseInt(o.product_id),
+      //       quantity: o.quantity,
+      //       variation_id: o.variation_id,
+      //     };
+      //   });
+      // } else {
+      //   this.newArray = amm.map((o) => {
+      //     return {
+      //       product_id: parseInt(o.product_id),
+      //       quantity: o.quantity,
+      //       variation_id: o.variation_id,
+      //     };
+      //   });
+      // }
+
+      const map = (obj, fun) =>
+        Object.entries(obj).reduce(
+          (prev, [key, value]) => ({
+            ...prev,
+            unique: fun(key, value),
+          }),
+          {}
+        );
+
+      const myFruits = map(this.cart.cart_contents, (_, o) => {
+        return {
+          product_id: parseInt(o.product_id),
+          quantity: o.quantity,
+          variation_id: o.variation_id,
+        };
+      });
+
+      console.log("myFruitsmyFruits" + JSON.stringify(myFruits));
+
+      //     var data = [{ Key: "A", Data: "1" }, { Key: "B", Data: "2" }, { Key: "C", Data: "12" }, { Key: "A", Data: "6" }, { Key: "B", Data: "4" }],
+      //     hash = Object.create(null),
+      //     result = data. reduce(function (r, o) {
+      //         if (!hash[o.Key]) {
+      //             hash[o.Key] = { Key: o.Key, Value: [] };
+      //             r.push(hash[o.Key]);
+      //         }
+      //         hash[o.Key].Value.push({ Data: o.Data });
+      //         return r;
+      //     }, []);
+
+      // console.log(result);
+
+      // console.log(newArray);
       let line_2 = {
-        first_name: "John",
-        last_name: "Doe",
-        address_1: "969 Market",
-        address_2: "",
-        city: "San Francisco",
-        state: "CA",
-        postcode: "94103",
-        country: "US",
-        email: "john.doe@example.com",
-        phone: "(555) 555-5555",
+        first_name: this.checkoutData.form.billing_first_name,
+        last_name: this.checkoutData.form.billing_last_name,
+        address_1: this.checkoutData.form.billing_address_1,
+        address_2: this.checkoutData.form.billing_address_2,
+        city: this.checkoutData.form.billing_city,
+        state: this.checkoutData.form.billing_state,
+        postcode: this.checkoutData.form.billing_postcode,
+        country: this.checkoutData.form.billing_country,
+        email: this.checkoutData.form.billing_email,
+        phone: this.checkoutData.form.billing_phone,
       };
 
       var line_3 = {
-        first_name: "John",
-        last_name: "Doe",
-        address_1: "969 Market",
-        address_2: "",
-        city: "San Francisco",
-        state: "CA",
-        postcode: "94103",
-        country: "US",
-        email: "john.doe@example.com",
-        phone: "(555) 555-5555",
+        first_name: this.checkoutData.form.shipping_first_name,
+        last_name: this.checkoutData.form.shipping_last_name,
+        address_1: this.checkoutData.form.shipping_address_1,
+        address_2: this.checkoutData.form.shipping_address_2,
+        city: this.checkoutData.form.shipping_city,
+        state: this.checkoutData.form.shipping_state,
+        postcode: this.checkoutData.form.shipping_postcode,
+        country: this.checkoutData.form.country,
+        email: this.checkoutData.form.billing_email,
+        phone: this.checkoutData.form.billing_phone,
       };
 
       let data = {
@@ -267,13 +470,12 @@ export class CheckoutPage implements OnInit {
 
         payment_method: this.checkoutData.form.payment_method,
         user_id: parseInt(this.settings.customer.id),
-        payment_method_title: "Cash on Delivery",
+        payment_method_title: this.checkoutData.form.payment_method,
       };
 
-      console.log();
       const formData = new FormData();
       formData.append("user_id", this.settings.customer.id);
-      formData.append("line_items", JSON.stringify(line_1));
+      formData.append("line_items", JSON.stringify(newArray));
       formData.append("billing", JSON.stringify(line_2));
       formData.append("shipping", JSON.stringify(line_3));
       formData.append("payment_method", this.checkoutData.form.payment_method);
@@ -281,29 +483,44 @@ export class CheckoutPage implements OnInit {
 
       console.log(data);
 
-      // return;
-      this.api.postItemNew("opyix_custom_checkout", formData).subscribe(
+      this.api.customCheckout("opyix_custom_checkout", formData).subscribe(
         (res) => {
-          // this.cart = res;
-          // console.log(this.cart);
-
           console.log(res);
-          this.handleOrder();
-          // this.api.cartData = this.cart;
+          console.log(res["order_id"]);
 
-          // this.presentToast(this.lan.addToCart);
-          // this.data.updateCart(this.cart.cart);
-          this.disableButton = false;
+          if (res["order_id"]) {
+            console.log("Handle Now");
+
+            this.results.result = "success";
+            this.handleOrder(res["order_id"]);
+          }
         },
         (err) => {
-          console.log(err);
           this.disableButton = false;
+          console.log(err);
         }
       );
     }
   }
-  handleOrder() {
-    if (this.results.result == "success") {
+  async alert(m) {
+    let alert = await this.alertCtrl.create({
+      header: "New Order Received. Your order number is " + m,
+
+      buttons: [
+        {
+          text: "Dismiss",
+          role: "cancel",
+          handler: (data) => {
+            console.log("Confirm Cancel:");
+          },
+        },
+      ],
+    });
+    alert.present();
+  }
+
+  handleOrder(orderid) {
+    if (this.checkoutData.form) {
       if (
         this.checkoutData.form.payment_method == "paystack" ||
         this.checkoutData.form.payment_method == "wallet" ||
@@ -315,7 +532,8 @@ export class CheckoutPage implements OnInit {
         this.checkoutData.form.payment_method == "authnet"
       ) {
         // alert('Handling Order');
-        this.orderSummary(this.results.redirect);
+        this.alert(orderid);
+        this.orderSummary(orderid);
       } else if (this.checkoutData.form.payment_method == "payuindia") {
         this.handlePayUPayment();
       } else if (this.checkoutData.form.payment_method == "paytm") {
@@ -329,13 +547,14 @@ export class CheckoutPage implements OnInit {
     }
   }
   orderSummary(address) {
-    var str = address;
-    var pos1 = str.lastIndexOf("-received/");
-    var pos2 = str.lastIndexOf("/?key=wc_order");
-    var pos3 = pos2 - (pos1 + 10);
-    var order_id = str.substr(pos1 + 10, pos3);
+    // var str = address;
+    // var pos1 = str.lastIndexOf("-received/");
+    // var pos2 = str.lastIndexOf("/?key=wc_order");
+    // var pos3 = pos2 - (pos1 + 10);
+    // var order_id = str.substr(pos1 + 10, pos3);
     // alert("order_id " + order_id);
-    this.navCtrl.navigateRoot("/order-summary/" + order_id);
+    // tabs/account/orders
+    this.navCtrl.navigateRoot("/order-summary/" + address);
   }
   handlePayment() {
     var options = "location=no,hidden=yes,toolbar=no,hidespinner=yes";
@@ -592,17 +811,114 @@ export class CheckoutPage implements OnInit {
 
       this.checkoutData.form["paystack_source"] = src.id;
       this.checkoutData.form["stripe_source"] = src.id;
-      this.api
-        .ajaxCall("/checkout?wc-ajax=checkout", this.checkoutData.form)
-        .subscribe(
-          (res) => {
-            this.results = res;
-            this.handleOrder();
-          },
-          (err) => {
-            this.disableButton = false;
+
+      this.checkoutData.form.wcfmmp_user_location = "";
+      this.checkoutData.form.wcfmmp_user_location_lat = "";
+      this.checkoutData.form.wcfmmp_user_location_lng = "";
+      this.checkoutData.form.wcfmmp_user_location = this.checkoutData.form.shipping_city;
+      this.checkoutData.form.wcfmmp_user_location_lat = 9.082;
+      this.checkoutData.form.wcfmmp_user_location_lng = 8.6753;
+
+      console.log("FORM DATA+" + JSON.stringify(this.checkoutData.form));
+
+      let line_1 = [
+        { product_id: 434, quantity: 2 },
+        { product_id: 674, variation_id: 694, quantity: 1 },
+      ];
+
+      let rmv = [];
+
+      rmv.push(this.cart.cart_contents);
+      console.log(line_1);
+      console.log(rmv);
+
+      let amm = this.generateArray(this.cart.cart_contents);
+      console.log(amm);
+
+      var newArray = amm.map((o) => {
+        return {
+          product_id: parseInt(o.product_id),
+          quantity: o.quantity,
+          variation_id: o.variation_id,
+        };
+      });
+
+      let line_2 = {
+        first_name: this.checkoutData.form.billing_first_name,
+        last_name: this.checkoutData.form.billing_last_name,
+        address_1: this.checkoutData.form.billing_address_1,
+        address_2: this.checkoutData.form.billing_address_2,
+        city: this.checkoutData.form.billing_city,
+        state: this.checkoutData.form.billing_state,
+        postcode: this.checkoutData.form.billing_postcode,
+        country: this.checkoutData.form.billing_country,
+        email: this.checkoutData.form.billing_email,
+        phone: this.checkoutData.form.billing_phone,
+      };
+
+      var line_3 = {
+        first_name: this.checkoutData.form.shipping_first_name,
+        last_name: this.checkoutData.form.shipping_last_name,
+        address_1: this.checkoutData.form.shipping_address_1,
+        address_2: this.checkoutData.form.shipping_address_2,
+        city: this.checkoutData.form.shipping_city,
+        state: this.checkoutData.form.shipping_state,
+        postcode: this.checkoutData.form.shipping_postcode,
+        country: this.checkoutData.form.country,
+        email: this.checkoutData.form.billing_email,
+        phone: this.checkoutData.form.billing_phone,
+      };
+
+      let data = {
+        line_items: rmv,
+        billing: line_2,
+        shipping: line_3,
+
+        payment_method: this.checkoutData.form.payment_method,
+        user_id: parseInt(this.settings.customer.id),
+        payment_method_title: this.checkoutData.form.payment_method,
+      };
+
+      console.log();
+      const formData = new FormData();
+      formData.append("user_id", this.settings.customer.id);
+      formData.append("line_items", JSON.stringify(newArray));
+      formData.append("billing", JSON.stringify(line_2));
+      formData.append("shipping", JSON.stringify(line_3));
+      formData.append("payment_method", this.checkoutData.form.payment_method);
+      formData.append(
+        "payment_method_title",
+        this.checkoutData.form.payment_method
+      );
+
+      console.log(data);
+
+      this.api.customCheckout("opyix_custom_checkout", formData).subscribe(
+        (res) => {
+          if (res["order_id"]) {
+            // this.results.result = "success";
+            this.handleOrder(res["order_id"]);
           }
-        );
+
+          console.log(res);
+        },
+        (err) => {
+          this.disableButton = false;
+          console.log(err);
+        }
+      );
+
+      // this.api
+      //   .ajaxCall("/checkout?wc-ajax=checkout", this.checkoutData.form)
+      //   .subscribe(
+      //     (res) => {
+      //       this.results = res;
+      //       this.handleOrder();
+      //     },
+      //     (err) => {
+      //       this.disableButton = false;
+      //     }
+      //   );
     } else {
       this.disableButton = false;
       this.errorMessage = "Cannot handle payment, Please check card details";

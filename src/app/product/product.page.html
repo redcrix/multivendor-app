@@ -258,7 +258,7 @@
             *ngIf="product.type != 'external' && product.type != 'auction' "
             class="add-to-cart-button"
             expand="block"
-            (click)="addToCart()"
+            (click)="addToCart(product)"
             >{{"ADD TO CART" | translate}}</ion-button
           >
 
